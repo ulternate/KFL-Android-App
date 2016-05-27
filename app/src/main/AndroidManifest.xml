@@ -2,6 +2,9 @@
 <manifest package="com.danielcswain.kfl"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--Internet Permission for api calls-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

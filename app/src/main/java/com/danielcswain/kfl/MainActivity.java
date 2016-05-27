@@ -9,30 +9,61 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.danielcswain.kfl.Articles.Article;
+import com.danielcswain.kfl.Articles.ArticleListAdapter;
+import com.danielcswain.kfl.AsyncHandlers.APIGetHandler;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public static ListView mListView;
+    public static ArticleListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set the content view to the main activity view (which contains our listview)
         setContentView(R.layout.activity_main);
+
+        // Find and connect/set up the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // Connect to the nav drawer layout and set it's toggle
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        // Populate the ListView
+        ArrayList<Article> articles = new ArrayList<Article>();
+        // Connect our articles array to the ListView adapter
+        mAdapter = new ArticleListAdapter(this, articles);
+        // Attach the adapter to the ListView
+        mListView = (ListView) findViewById(R.id.articlesListView);
+        if (mListView != null) {
+            mListView.setAdapter(mAdapter);
+        }
+
+        // Populate the ListView asynchronously from our web service
+        JSONArray json = null;
+        new APIGetHandler(json).execute("ulternate", "JohnSykes");
+
+        // Set the navigation view listener to navigate between views
+                NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -55,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.actionSettings) {
             return true;
         }
 
@@ -68,15 +99,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_login) {
+        if (id == R.id.navLogin) {
             // Handle the login action
-        } else if (id == R.id.nav_register) {
+        } else if (id == R.id.navRegister) {
             // Handle the register action
-        } else if (id == R.id.nav_selections) {
+        } else if (id == R.id.navSelections) {
             // Handle the selections action
+        } else if (id == R.id.navArticles) {
+            // Handle the articles action
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
