@@ -35,8 +35,6 @@ public class ArticleListAdapter extends ArrayAdapter<Article>{
 
         JSONArray json = null;
         new APIGetHandler(json).execute("ulternate", "JohnSykes");
-
-
     }
 
     /**
@@ -63,11 +61,13 @@ public class ArticleListAdapter extends ArrayAdapter<Article>{
         TextView tvAuthor = (TextView) convertView.findViewById(R.id.articleAuthor);
 
         // Populate the data into the template view using the data object
-        new DownloadImageTask((ImageView) convertView.findViewById(R.id.articleThumbnail)).execute(article.thumbnailURL);
         tvTitle.setText(article.title);
         tvAuthor.setText(article.author);
         tvDate.setText(article.postDate.toString());
         tvSummary.setText(article.summary);
+
+        // Load the image asynchronously
+        new DownloadImageTask((ImageView) convertView.findViewById(R.id.articleThumbnail)).execute(article.thumbnailURL);
 
         // Return the completed view to render on screen
         return convertView;

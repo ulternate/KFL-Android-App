@@ -17,6 +17,7 @@ import java.io.InputStream;
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView articleThumbnail;
+    String path;
 
     // Our access point to this private classes methods
     public DownloadImageTask(ImageView imageView) {
@@ -25,10 +26,10 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     // Try and load the thumbnail image url in the background
     protected Bitmap doInBackground(String... urls) {
-        String urlDisplay = urls[0];
+        path = urls[0];
         Bitmap bitmap = null;
         try {
-            InputStream in = new java.net.URL(urlDisplay).openStream();
+            InputStream in = new java.net.URL(path).openStream();
             bitmap = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

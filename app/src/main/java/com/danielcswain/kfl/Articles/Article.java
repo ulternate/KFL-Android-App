@@ -1,7 +1,5 @@
 package com.danielcswain.kfl.Articles;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +50,11 @@ public class Article {
         this.postDate = postDate;
     }
 
+    /**
+     * Article constructor from a JSONObject
+     *
+     * @param json: A JsonObject to create model from API return
+     */
     public Article(JSONObject json){
         try {
             this.thumbnailURL = json.getString("thumbnail_url");
@@ -65,12 +68,10 @@ public class Article {
             SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
             try {
                 Date oneWayTripDate = input.parse(json.getString("pub_date"));
-                Log.d("oneWayTripDate", oneWayTripDate.toString());
                 this.postDate = output.format(oneWayTripDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
