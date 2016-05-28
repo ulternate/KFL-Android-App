@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/articleThumbnail"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true" />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/layout_vertical_margin"
+    android:paddingTop="@dimen/layout_vertical_margin" >
 
     <TextView
         android:id="@+id/articleTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/articleThumbnail"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         android:text="Test Article Title"
         android:textStyle="bold" />
 
@@ -24,8 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/articleTitle"
-        android:layout_toRightOf="@id/articleThumbnail"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         android:layout_marginTop="@dimen/layout_vertical_margin"
         android:text="Author: Daniel"/>
 
@@ -33,10 +26,7 @@
         android:id="@+id/articlePubDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/articleTitle"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_toRightOf="@id/articleAuthor"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
+        android:layout_alignParentRight="true"
         android:text="Date: test"/>
 
     <TextView
@@ -45,8 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/articleAuthor"
         android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_toRightOf="@id/articleThumbnail"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         android:text="Lots of text lots of text lots of text lots of text"/>
 
 </RelativeLayout>

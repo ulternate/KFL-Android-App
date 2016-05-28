@@ -5,18 +5,6 @@
         <item
             android:id="@+id/navArticles"
             android:title="@string/articles" />
-
-        <item
-            android:id="@+id/navLogin"
-            android:title="@string/login"/>
-        <item
-            android:id="@+id/navRegister"
-            android:title="@string/register"/>
-        <item
-            android:id="@+id/navSelections"
-            android:title="@string/select_team"/>
-
-
     </group>
 
 </menu>

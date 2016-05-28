@@ -1,5 +1,7 @@
 package com.danielcswain.kfl;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,11 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.danielcswain.kfl.Articles.Article;
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
+import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.AsyncHandlers.APIGetHandler;
+import com.danielcswain.kfl.Helpers.DatabaseHelper;
 
 import org.json.JSONArray;
 
@@ -24,12 +29,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static ListView mListView;
     public static ArticleListAdapter mAdapter;
+    public static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set the content view to the main activity view (which contains our listview)
         setContentView(R.layout.activity_main);
+
+        // Get the application context for our Helpers/Handlers to use
+        mContext = this.getApplicationContext();
 
         // Find and connect/set up the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -43,18 +52,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         // Populate the ListView
-        ArrayList<Article> articles = new ArrayList<Article>();
-        // Connect our articles array to the ListView adapter
-        mAdapter = new ArticleListAdapter(this, articles);
+        ArrayList<ArticleObject> articleObjects = new ArrayList<ArticleObject>();
+        // Connect our articleObjects array to the ListView adapter
+        mAdapter = new ArticleListAdapter(this, articleObjects);
         // Attach the adapter to the ListView
         mListView = (ListView) findViewById(R.id.articlesListView);
         if (mListView != null) {
             mListView.setAdapter(mAdapter);
+            // Set an onItemClickedListener to launch our individual Article activity when clicked
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Create the launch intent
+                    Intent intent = new Intent(mContext, Article.class);
+                    // Add the article string extras to the intent for showing the article content
+                    ArticleObject articleObject = (ArticleObject) mListView.getItemAtPosition(position);
+                    intent.putExtra("title", articleObject.title);
+                    intent.putExtra("author", articleObject.author);
+                    intent.putExtra("imageURL", articleObject.imageURL);
+                    intent.putExtra("pubDate", articleObject.postDate);
+                    intent.putExtra("longText", articleObject.longText);
+                    startActivity(intent);
+                }
+            });
         }
 
-        // Populate the ListView asynchronously from our web service
-        JSONArray json = null;
-        new APIGetHandler(json).execute("ulternate", "JohnSykes");
+        // Connect to the database and populate the list adapter with the existing records
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(mContext);
+        mAdapter.addAll(mDatabaseHelper.getArticles());
+        mAdapter.notifyDataSetChanged();
+        mDatabaseHelper.close();
+
+        // Add the new articleObjects to our database and listview but only the first time this application loads
+        if (MainApplication.firstStart) {
+            JSONArray json = null;
+            new APIGetHandler(json).execute("");
+            MainApplication.setFirstStart(false);
+        }
+
+
 
         // Set the navigation view listener to navigate between views
                 NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
@@ -99,13 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.navLogin) {
-            // Handle the login action
-        } else if (id == R.id.navRegister) {
-            // Handle the register action
-        } else if (id == R.id.navSelections) {
-            // Handle the selections action
-        } else if (id == R.id.navArticles) {
+        if (id == R.id.navArticles) {
             // Handle the articles action
         }
 

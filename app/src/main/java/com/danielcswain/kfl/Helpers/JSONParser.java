@@ -1,7 +1,5 @@
 package com.danielcswain.kfl.Helpers;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,16 +22,16 @@ import java.util.HashMap;
  * Connect to a provided URL and return a JSON array
  */
 public class JSONParser {
-    String charset = "UTF-8";
-    HttpURLConnection conn;
-    DataOutputStream wr;
-    StringBuilder result;
-    URL urlObj;
-    JSONObject jObj = null;
-    StringBuilder sbParams;
-    String paramsString;
+    static String charset = "UTF-8";
+    static HttpURLConnection conn;
+    static DataOutputStream wr;
+    static StringBuilder result;
+    static URL urlObj;
+    static JSONObject jObj = null;
+    static StringBuilder sbParams;
+    static String paramsString;
 
-    public JSONArray makeHttpRequest(String url, String method, HashMap<String,String> params) {
+    public static JSONArray makeHttpRequest(String url, String method, HashMap<String, String> params) {
         sbParams = new StringBuilder();
         int i = 0;
         for (String key : params.keySet()) {
@@ -97,9 +95,6 @@ public class JSONParser {
             while ((line = reader.readLine()) != null) {
                 result.append(line);
             }
-
-            Log.d("JSON Parser", "result: " + result.toString());
-
         } catch (IOException e) {
             e.printStackTrace();
         }

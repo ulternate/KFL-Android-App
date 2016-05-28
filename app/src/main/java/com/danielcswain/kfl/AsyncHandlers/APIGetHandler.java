@@ -3,7 +3,8 @@ package com.danielcswain.kfl.AsyncHandlers;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.danielcswain.kfl.Articles.Article;
+import com.danielcswain.kfl.Articles.ArticleObject;
+import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Helpers.JSONParser;
 import com.danielcswain.kfl.MainActivity;
 
@@ -20,7 +21,7 @@ import java.util.HashMap;
  */
 public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
 
-    JSONParser jsonParser = new JSONParser();
+//    JSONParser jsonParser = new JSONParser();
     JSONArray json;
 
     private static final String LOGIN_URL = "http://www.kfl.com.au/api/articles";
@@ -35,12 +36,13 @@ public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
         try {
 
             HashMap<String, String> params = new HashMap<>();
-            params.put("name", args[0]);
-            params.put("password", args[1]);
-
+            if (args.length > 1) {
+                params.put("name", args[0]);
+                params.put("password", args[1]);
+            }
             Log.d("request", "starting");
 
-            JSONArray json = jsonParser.makeHttpRequest(
+            JSONArray json = JSONParser.makeHttpRequest(
                     LOGIN_URL, "GET", params);
 
             if (json != null) {
@@ -58,19 +60,38 @@ public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
-        json = jsonArray;
-        // Loop through the JSONArray and populate our Articles array list and array list adapter
-        ArrayList<Article> articles = new ArrayList<Article>();
+        // ArrayList of new articles
+        ArrayList<ArticleObject> newArticleObjects = new ArrayList<>();
+        // Get an instance of our DatabaseHelper so we can add the items from the JSONArray to the db
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(MainActivity.mContext);
+        // Loop through the JSONArray and add only the newArticleObjects to the Database and newArticleObjects array
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                articles.add(new Article(jsonArray.getJSONObject(i)));
+                // Try and create an ArticleObject object from the JSONObject at i
+                ArticleObject articleObject = new ArticleObject(jsonArray.getJSONObject(i));
+                // If the articleObject doesn't exist then it will be added and it needs to be added to our ArrayList first
+                if (!mDatabaseHelper.doesArticleExist(articleObject)) {
+                    newArticleObjects.add(articleObject);
+                }
+                // Add the articleObject to the database (this method uses the doesArticleExist method internally
+                mDatabaseHelper.addArticle(articleObject);
+
             } catch (JSONException e) {
+                // There was an exception grabbing a JSONObject from our JSONArray
+                Log.e("APIGet.onPostExecute", e.toString());
                 e.printStackTrace();
             }
         }
-        // Update the list view
-        MainActivity.mAdapter.addAll(articles);
-        MainActivity.mAdapter.notifyDataSetChanged();
+        // Close the connection to the database helper to avoid memory leaks now we're finished with it
+        mDatabaseHelper.close();
+
+        // If we have new articles then add them to the list adapter (This handles new articles and first launch with no articles
+        if (newArticleObjects.size() > 0) {
+            MainActivity.mAdapter.addAll(newArticleObjects);
+            // Notify the list adapter that the Data Set was changed
+            MainActivity.mAdapter.notifyDataSetChanged();
+        }
+
 
     }
 }

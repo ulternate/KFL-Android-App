@@ -10,10 +10,10 @@ import java.util.Date;
 /**
  * Created by ulternate on 27/05/2016.
  *
- * A custom Article object class used by the ListView to hold an array of Articles
+ * A custom ArticleObject object class used by the ListView to hold an array of Articles
  * The APIGetHandler can return articles in a JSON
  */
-public class Article {
+public class ArticleObject {
 
     /* Object constants */
     public String thumbnailURL;
@@ -26,7 +26,7 @@ public class Article {
     public String postDate;
 
     /**
-     * Article constructor class given the listed parameters
+     * ArticleObject constructor class given the listed parameters
      * There are no setters as the Articles are read only
      *
      * @param thumbnailURL: the url for the thumbnail image
@@ -38,8 +38,8 @@ public class Article {
      * @param author: the article author
      * @param postDate: the post date of the article
      */
-    public Article(String thumbnailURL, String imageURL, String summary, String longText,
-                   String category, String author, String title, String postDate){
+    public ArticleObject(String thumbnailURL, String imageURL, String summary, String longText,
+                         String category, String author, String title, String postDate){
         this.thumbnailURL = thumbnailURL;
         this.imageURL = imageURL;
         this.summary = summary;
@@ -51,11 +51,11 @@ public class Article {
     }
 
     /**
-     * Article constructor from a JSONObject
+     * ArticleObject constructor from a JSONObject
      *
      * @param json: A JsonObject to create model from API return
      */
-    public Article(JSONObject json){
+    public ArticleObject(JSONObject json){
         try {
             this.thumbnailURL = json.getString("thumbnail_url");
             this.imageURL = json.getString("image_url");
