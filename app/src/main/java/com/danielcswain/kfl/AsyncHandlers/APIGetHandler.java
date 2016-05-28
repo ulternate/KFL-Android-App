@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
+import com.danielcswain.kfl.Articles.ArticleComparator;
 import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Helpers.JSONParser;
@@ -86,9 +87,12 @@ public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
         // If we have new articles then add them to the list adapter (This handles new articles and first launch with no articles
         if (newArticleObjects.size() > 0) {
             MainActivity.mAdapter.addAll(newArticleObjects);
-            // Notify the list adapter that the Data Set was changed
-            MainActivity.mAdapter.notifyDataSetChanged();
         }
+
+        // Sort the mAdapter regardless of if there's new content, as the database might not be sorted
+        MainActivity.mAdapter.sort(new ArticleComparator());
+        // Notify the list adapter that the Data Set was changed
+        MainActivity.mAdapter.notifyDataSetChanged();
 
         // Hide the loading/progress bar as the AsyncTask has finished
         MainActivity.mProgressBar.setVisibility(View.INVISIBLE);

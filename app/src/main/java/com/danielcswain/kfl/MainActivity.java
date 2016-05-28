@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.danielcswain.kfl.Articles.ArticleComparator;
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
 import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.AsyncHandlers.APIGetHandler;
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Connect to the database and populate the list adapter with the existing records
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(mContext);
         mAdapter.addAll(mDatabaseHelper.getArticles());
+        // Sort the data set and notify it was changed
+        mAdapter.sort(new ArticleComparator());
         mAdapter.notifyDataSetChanged();
         mDatabaseHelper.close();
 
