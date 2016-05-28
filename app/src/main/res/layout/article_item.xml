@@ -6,11 +6,18 @@
     android:paddingBottom="@dimen/layout_vertical_margin"
     android:paddingTop="@dimen/layout_vertical_margin" >
 
+    <ImageView
+        android:id="@+id/articleThumbnail"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/articleTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/articleThumbnail"
+        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         android:textStyle="bold"
         />
 
@@ -20,12 +27,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/articleTitle"
         android:layout_marginTop="@dimen/layout_vertical_margin"
+        android:layout_toRightOf="@id/articleThumbnail"
+        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         />
 
     <TextView
         android:id="@+id/articlePubDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/articleTitle"
+        android:layout_marginTop="@dimen/layout_vertical_margin"
         android:layout_alignParentRight="true"
         />
 
@@ -35,6 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/articleAuthor"
         android:layout_marginTop="@dimen/layout_vertical_margin"
+        android:layout_toRightOf="@id/articleThumbnail"
+        android:layout_marginLeft="@dimen/layout_horizontal_margin"
         />
 
 </RelativeLayout>
