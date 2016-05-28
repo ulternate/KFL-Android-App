@@ -1,6 +1,7 @@
 package com.danielcswain.kfl.Articles;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class ArticleListAdapter extends ArrayAdapter<ArticleObject>{
         tvTitle.setText(articleObject.title);
         tvAuthor.setText(articleObject.author);
         tvDate.setText(articleObject.postDate);
-        tvSummary.setText(articleObject.summary);
+        // Some of the summary text contains html objects like mailTo links, so using Html.fromHtml for the summary
+        tvSummary.setText(Html.fromHtml(articleObject.summary));
 
         // Return the completed view to render on screen
         return convertView;

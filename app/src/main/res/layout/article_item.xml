@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Test Article Title"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <TextView
         android:id="@+id/articleAuthor"
@@ -20,14 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/articleTitle"
         android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:text="Author: Daniel"/>
+        />
 
     <TextView
         android:id="@+id/articlePubDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="Date: test"/>
+        />
 
     <TextView
         android:id="@+id/articleSummary"
@@ -35,6 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/articleAuthor"
         android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:text="Lots of text lots of text lots of text lots of text"/>
+        />
 
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
 import com.danielcswain.kfl.Articles.ArticleObject;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ListView mListView;
     public static ArticleListAdapter mAdapter;
     public static Context mContext;
+    public static ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListView = (ListView) findViewById(R.id.articlesListView);
         if (mListView != null) {
             mListView.setAdapter(mAdapter);
-            // Set an onItemClickedListener to launch our individual Article activity when clicked
+            // Set an onItemClickedListener to launch our individual ArticleActivity activity when clicked
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Create the launch intent
-                    Intent intent = new Intent(mContext, Article.class);
+                    Intent intent = new Intent(mContext, ArticleActivity.class);
                     // Add the article string extras to the intent for showing the article content
                     ArticleObject articleObject = (ArticleObject) mListView.getItemAtPosition(position);
                     intent.putExtra("title", articleObject.title);
@@ -83,18 +85,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAdapter.notifyDataSetChanged();
         mDatabaseHelper.close();
 
-        // Add the new articleObjects to our database and listview but only the first time this application loads
+        // Connect to the progress bar so we can turn it off when the AsyncTask has finished
+        mProgressBar = (ProgressBar) findViewById(R.id.loadingBar);
+
+        // Add the new articleObjects to our database and ListView but only the first time this application loads
         if (MainApplication.firstStart) {
-            JSONArray json = null;
-            new APIGetHandler(json).execute("");
+            // Call the helper method used to get the latest articles from the web service
+            getLatestArticlesFromWebService("http://www.kfl.com.au/api/articles");
+            // Set firstStart to false so this doesn't run again unless manually called by user later
             MainApplication.setFirstStart(false);
         }
-
-
 
         // Set the navigation view listener to navigate between views
                 NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    private void getLatestArticlesFromWebService(String url){
+        // Show the progressBar
+        assert mProgressBar != null;
+        mProgressBar.setVisibility(View.VISIBLE);
+        // Load the json array through the web service api
+        JSONArray json = null;
+        new APIGetHandler(json).execute(url);
     }
 
     @Override
@@ -136,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.navArticles) {
-            // Handle the articles action
+            // Refresh the articles
+            getLatestArticlesFromWebService("http://www.kfl.com.au/api/articles");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);

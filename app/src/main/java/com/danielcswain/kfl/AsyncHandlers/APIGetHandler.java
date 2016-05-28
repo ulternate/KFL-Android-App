@@ -2,6 +2,7 @@ package com.danielcswain.kfl.AsyncHandlers;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
@@ -36,18 +37,15 @@ public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
         try {
 
             HashMap<String, String> params = new HashMap<>();
-            if (args.length > 1) {
-                params.put("name", args[0]);
-                params.put("password", args[1]);
+            if (args.length > 2) {
+                params.put("name", args[1]);
+                params.put("password", args[2]);
             }
-            Log.d("request", "starting");
 
             JSONArray json = JSONParser.makeHttpRequest(
-                    LOGIN_URL, "GET", params);
+                    args[0], "GET", params);
 
             if (json != null) {
-                Log.d("JSON result", json.toString());
-
                 return json;
             }
 
@@ -92,6 +90,7 @@ public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
             MainActivity.mAdapter.notifyDataSetChanged();
         }
 
-
+        // Hide the loading/progress bar as the AsyncTask has finished
+        MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
     }
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.danielcswain.kfl.AsyncHandlers.DownloadImageTask;
 
-public class Article extends AppCompatActivity {
+public class ArticleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,8 @@ public class Article extends AppCompatActivity {
         tvTitle.setText(intent.getStringExtra("title"));
         tvAuthor.setText(intent.getStringExtra("author"));
         tvDate.setText(intent.getStringExtra("pubDate"));
+        // Use an embedded webView for the longText as the site content is actually formatted using html inside the longText
+        // Html.fromHtml isn't good enough in this situation as it doesn't support all Html element types
         webView.loadData(intent.getStringExtra("longText"), "text/html; charset=UTF-8", null);
 
         // Load the image asynchronously

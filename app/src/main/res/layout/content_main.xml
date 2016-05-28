@@ -12,7 +12,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.danielcswain.kfl.MainActivity"
     tools:showIn="@layout/app_bar_main">
-
+    
+    <android.support.v4.widget.ContentLoadingProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/loadingBar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:visibility="invisible" />
+    
     <ListView
         android:id="@+id/articlesListView"
         android:layout_width="match_parent"
