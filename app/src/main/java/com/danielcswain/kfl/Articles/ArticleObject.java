@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by ulternate on 27/05/2016.
  *
  * A custom ArticleObject object class used by the ListView to hold an array of Articles
- * The APIGetHandler can return articles in a JSON
+ * The ArticleGetHandler can return articles in a JSON
  */
 public class ArticleObject {
 

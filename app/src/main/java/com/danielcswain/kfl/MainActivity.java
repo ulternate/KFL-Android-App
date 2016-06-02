@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import com.danielcswain.kfl.Articles.ArticleComparator;
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
 import com.danielcswain.kfl.Articles.ArticleObject;
-import com.danielcswain.kfl.AsyncHandlers.APIGetHandler;
+import com.danielcswain.kfl.AsyncHandlers.ArticleGetHandler;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 
 import org.json.JSONArray;
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mProgressBar.setVisibility(View.VISIBLE);
         // Load the json array through the web service api
         JSONArray json = null;
-        new APIGetHandler(json).execute(url);
+        new ArticleGetHandler(json).execute(url);
     }
 
     @Override
@@ -155,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.navArticles) {
             // Refresh the articles
             getLatestArticlesFromWebService("http://www.kfl.com.au/api/articles");
+        } else if (id == R.id.navLogin) {
+            // Show the login view
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);

@@ -14,9 +14,10 @@
     <android.support.v4.widget.ContentLoadingProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:id="@+id/loadingBar"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
+        android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="@dimen/layout_vertical_margin"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible" />
     
     <ListView

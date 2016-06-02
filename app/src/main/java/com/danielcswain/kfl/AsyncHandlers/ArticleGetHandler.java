@@ -21,14 +21,14 @@ import java.util.HashMap;
  *
  * Get a json from the provided url
  */
-public class APIGetHandler extends AsyncTask<String, Void, JSONArray> {
+public class ArticleGetHandler extends AsyncTask<String, Void, JSONArray> {
 
 //    JSONParser jsonParser = new JSONParser();
     JSONArray json;
 
     private static final String LOGIN_URL = "http://www.kfl.com.au/api/articles";
 
-    public APIGetHandler(JSONArray json){
+    public ArticleGetHandler(JSONArray json){
         this.json = json;
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,47 +10,53 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ArticleActivity">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="24sp"
-        />
-
-    <ImageView
-        android:id="@+id/image"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_alignParentLeft="true"
-        />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            />
 
-    <TextView
-        android:id="@+id/pubDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_alignParentRight="true"
-        />
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_below="@id/title"
+            android:layout_marginTop="@dimen/layout_vertical_margin"
+            android:layout_centerHorizontal="true"
+            />
 
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/author"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        />
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="@dimen/layout_vertical_margin"
+            android:layout_alignParentLeft="true"
+            />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/pubDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="@dimen/layout_vertical_margin"
+            android:layout_alignParentRight="true"
+            />
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/author"
+            android:layout_marginTop="@dimen/layout_vertical_margin"
+            />
+    </RelativeLayout>
+
+</ScrollView>

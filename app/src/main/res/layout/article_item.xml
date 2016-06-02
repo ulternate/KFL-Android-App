@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/articleThumbnail"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content" />
 
     <TextView

@@ -9,4 +9,13 @@
     <string name="register">Register</string>
     <string name="select_team">Selections</string>
     <string name="refreshArticles">Refresh Articles</string>
+    <string name="username">Username:</string>
+    <string name="usernameHint">Enter Username</string>
+    <string name="email">Email:</string>
+    <string name="emailHint">Enter Email</string>
+    <string name="password">Password:</string>
+    <string name="passwordHint">Enter Password</string>
+    <string name="actionSubmit">Submit</string>
+    <string name="loginBlurb">Login to enable team selections whilst on the go</string>
+    <string name="navLogin">Login</string>
 </resources>
