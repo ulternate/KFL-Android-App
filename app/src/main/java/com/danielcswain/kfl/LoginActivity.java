@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     loginLoadingText.setVisibility(View.VISIBLE);
 
                     // Call the LoginAsyncTask
-                    new LoginAsyncTask().execute("http://www.kfl.com.au/rest-auth/login/",
+                    new LoginAsyncTask().execute(MainActivity.LOGIN_URL,
                             usernameField.getText().toString(),
                             emailField.getText().toString(),
                             passwordField.getText().toString());

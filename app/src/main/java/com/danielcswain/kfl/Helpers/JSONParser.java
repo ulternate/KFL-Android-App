@@ -118,8 +118,8 @@ public class JSONParser {
                 Log.d("jsonResponseObject", jsonArray.toString());
             }catch (JSONException p){
                 p.printStackTrace();
+                e.printStackTrace();
             }
-            e.printStackTrace();
         }
 
         return jsonArray;

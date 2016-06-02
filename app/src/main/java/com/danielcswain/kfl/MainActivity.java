@@ -22,6 +22,7 @@ import com.danielcswain.kfl.Articles.ArticleComparator;
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
 import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.AsyncHandlers.ArticleGetHandler;
+import com.danielcswain.kfl.AsyncHandlers.LogoutAsyncTask;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 
 import org.json.JSONArray;
@@ -39,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static SharedPreferences mSharedPrefs;
     private NavigationView navigationView;
     private static final int LOGIN_ACTIVITY_REQUEST = 1;
+
+    public static final String LOGIN_URL = "http://www.kfl.com.au/rest-auth/login/";
+    public static final String LOGOUT_URL = "http://www.kfl.com.au/rest-auth/logout/";
+    public static final String ARTICLES_URL = "http://www.kfl.com.au/api/articles";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Add the new articleObjects to our database and ListView but only the first time this application loads
         if (MainApplication.firstStart) {
             // Call the helper method used to get the latest articles from the web service
-            getLatestArticlesFromWebService("http://www.kfl.com.au/api/articles");
+            getLatestArticlesFromWebService(ARTICLES_URL);
             // Set firstStart to false so this doesn't run again unless manually called by user later
             MainApplication.setFirstStart(false);
         }
@@ -169,20 +174,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.navArticles) {
             // Refresh the articles
-            getLatestArticlesFromWebService("http://www.kfl.com.au/api/articles");
+            getLatestArticlesFromWebService(ARTICLES_URL);
         } else if (id == R.id.navLogin) {
             // Show the login view
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST);
         } else if (id == R.id.navLogout){
-            // Delete the API Token and the username
-            mSharedPrefs.edit().putString("token", "").apply();
-            mSharedPrefs.edit().putString("username", "").apply();
             // Set the login action as visible and hide this action
             navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
             navigationView.getMenu().findItem(R.id.navLogout).setVisible(false);
-            // Display a toast message to the user
-            Toast.makeText(mContext, R.string.loggedOut, Toast.LENGTH_SHORT).show();
+            // Call the LogoutAsyncTask with the url and token to log the user out
+            new LogoutAsyncTask().execute(LOGOUT_URL, mSharedPrefs.getString("token", ""));
+            // Delete the API Token and the username from the SharedPreferences file as well
+            mSharedPrefs.edit().putString("token", "").apply();
+            mSharedPrefs.edit().putString("username", "").apply();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);

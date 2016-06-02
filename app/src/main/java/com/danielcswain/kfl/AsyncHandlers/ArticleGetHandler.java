@@ -23,10 +23,7 @@ import java.util.HashMap;
  */
 public class ArticleGetHandler extends AsyncTask<String, Void, JSONArray> {
 
-//    JSONParser jsonParser = new JSONParser();
     JSONArray json;
-
-    private static final String LOGIN_URL = "http://www.kfl.com.au/api/articles";
 
     public ArticleGetHandler(JSONArray json){
         this.json = json;
