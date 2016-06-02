@@ -2,6 +2,7 @@ package com.danielcswain.kfl;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.danielcswain.kfl.Articles.ArticleComparator;
 import com.danielcswain.kfl.Articles.ArticleListAdapter;
@@ -33,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ArticleListAdapter mAdapter;
     public static Context mContext;
     public static ProgressBar mProgressBar;
+    public final String SHARED_PREFS_NAME = "com.danielcswain.kfl.sharedPreferences";
+    public static SharedPreferences mSharedPrefs;
+    private NavigationView navigationView;
+    private static final int LOGIN_ACTIVITY_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +105,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             MainApplication.setFirstStart(false);
         }
 
+        // Get the navigationView object
+        navigationView = (NavigationView) findViewById(R.id.navView);
+        assert navigationView != null;
+        // If the user is logged in then hide the Login option from the navMenu
+        mSharedPrefs = mContext.getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+        if (!mSharedPrefs.getString("token", "").equals("") && !mSharedPrefs.getString("username", "").equals("")) {
+            Toast.makeText(mContext, getResources().getString(R.string.welcomeBackUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_SHORT).show();
+            navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
+            navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
+        }
         // Set the navigation view listener to navigate between views
-                NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -158,11 +173,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.navLogin) {
             // Show the login view
             Intent intent = new Intent(mContext, LoginActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST);
+        } else if (id == R.id.navLogout){
+            // Delete the API Token and the username
+            mSharedPrefs.edit().putString("token", "").apply();
+            mSharedPrefs.edit().putString("username", "").apply();
+            // Set the login action as visible and hide this action
+            navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
+            navigationView.getMenu().findItem(R.id.navLogout).setVisible(false);
+            // Display a toast message to the user
+            Toast.makeText(mContext, R.string.loggedOut, Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOGIN_ACTIVITY_REQUEST){
+            if (resultCode == RESULT_OK){
+                // Get the token and username from the returning intent
+                String token = data.getStringExtra("token");
+                String username = data.getStringExtra("username");
+                // Save the token and username in the SharedPreferences file
+                mSharedPrefs.edit().putString("token", token).apply();
+                mSharedPrefs.edit().putString("username", username).apply();
+                // Hide the login navMenu item and show the logout action
+                navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
+                navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
+                // Display a welcome message to the user
+                Toast.makeText(mContext, getResources().getString(R.string.welcomeUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 }

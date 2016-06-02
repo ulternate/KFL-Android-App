@@ -1,5 +1,7 @@
 package com.danielcswain.kfl.Helpers;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +57,7 @@ public class JSONParser {
                 conn = (HttpURLConnection) urlObj.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("Accept-Charset", charset);
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -105,7 +108,17 @@ public class JSONParser {
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(result.toString());
+            Log.d("jsonResponse", jsonArray.toString());
         } catch (JSONException e) {
+            try{
+                // In case we don't get an array, but just a JSON object, then lets add it into a json Array
+                JSONObject jsonObject = new JSONObject(result.toString());
+                jsonArray = new JSONArray();
+                jsonArray.put(jsonObject);
+                Log.d("jsonResponseObject", jsonArray.toString());
+            }catch (JSONException p){
+                p.printStackTrace();
+            }
             e.printStackTrace();
         }
 

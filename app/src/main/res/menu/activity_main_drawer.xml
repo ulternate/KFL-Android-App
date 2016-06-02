@@ -9,6 +9,28 @@
         <item
             android:id="@+id/navLogin"
             android:title="@string/navLogin" />
+
+        <item
+            android:id="@+id/navLogout"
+            android:title="@string/navLogout"
+            android:visible="false" />
+
+        <item
+            android:id="@+id/navRounds"
+            android:title="@string/navRounds" />
+
+        <item
+            android:id="@+id/navMyTeam"
+            android:title="@string/navMyTeam" />
+
+        <item
+            android:id="@+id/navSelectTeam"
+            android:title="@string/navSelectTeam" />
+
+        <item
+            android:id="@+id/navSelectReserves"
+            android:title="@string/navSelectReserves" />
+
     </group>
 
 </menu>

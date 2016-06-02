@@ -18,4 +18,15 @@
     <string name="actionSubmit">Submit</string>
     <string name="loginBlurb">Login to enable team selections whilst on the go</string>
     <string name="navLogin">Login</string>
+    <string name="loggingIn">Logging In</string>
+    <string name="noInputData">Please ensure all fields have been filled</string>
+    <string name="loginError">There was an error logging you in, please check your login details and try again.</string>
+    <string name="navLogout">Logout</string>
+    <string name="navRounds">View Round</string>
+    <string name="navMyTeam">My Roster</string>
+    <string name="navSelectTeam">Select Team</string>
+    <string name="navSelectReserves">Select Reserves</string>
+    <string name="loggedOut">Successfully Logged Out</string>
+    <string name="welcomeBackUser">Welcome back %1$s!</string>
+    <string name="welcomeUser">Welcome %1$s, you\'re logged in.</string>
 </resources>
