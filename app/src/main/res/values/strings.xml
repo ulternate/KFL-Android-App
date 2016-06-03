@@ -29,4 +29,8 @@
     <string name="loggedOut">Successfully Logged Out</string>
     <string name="welcomeBackUser">Welcome back %1$s!</string>
     <string name="welcomeUser">Welcome %1$s, you\'re logged in.</string>
+    <string name="loading">Loading</string>
+    <string name="articleActivityName">Article</string>
+    <string name="loginActivityName">Login</string>
+    <string name="rosterActivityName">My Roster</string>
 </resources>

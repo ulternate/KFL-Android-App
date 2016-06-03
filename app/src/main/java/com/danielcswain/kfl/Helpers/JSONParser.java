@@ -87,6 +87,32 @@ public class JSONParser {
                 e.printStackTrace();
             }
 
+        } else if (method.equals("GET AUTH")){
+            String apiToken = "";
+            if (sbParams.length() != 0){
+                Log.d("GET AUTH PARAMs", sbParams.toString());
+                apiToken = sbParams.toString().split(" =")[1];
+                Log.d("GET AUTH TOKEN", apiToken);
+            }
+            try {
+                urlObj = new URL(url);
+                conn = (HttpURLConnection) urlObj.openConnection();
+                conn.setDoOutput(false);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Authorization", "Token " + apiToken);
+                conn.setRequestProperty("Accept-Charset", charset);
+                conn.setConnectTimeout(15000);
+                Log.d("conn header", conn.getHeaderFields().toString());
+                conn.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            Log.d("response", conn.getResponseMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         try {

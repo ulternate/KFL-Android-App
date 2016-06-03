@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String LOGIN_URL = "http://www.kfl.com.au/rest-auth/login/";
     public static final String LOGOUT_URL = "http://www.kfl.com.au/rest-auth/logout/";
-    public static final String ARTICLES_URL = "http://www.kfl.com.au/api/articles";
+    public static final String ARTICLES_URL = "http://www.kfl.com.au/api/articles/";
+    public static final String TEAM_URL = "http://www.kfl.com.au/api/user_team/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         // Populate the ListView
-        ArrayList<ArticleObject> articleObjects = new ArrayList<ArticleObject>();
+        ArrayList<ArticleObject> articleObjects = new ArrayList<>();
         // Connect our articleObjects array to the ListView adapter
         mAdapter = new ArticleListAdapter(this, articleObjects);
         // Attach the adapter to the ListView
@@ -116,9 +117,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // If the user is logged in then hide the Login option from the navMenu
         mSharedPrefs = mContext.getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
         if (!mSharedPrefs.getString("token", "").equals("") && !mSharedPrefs.getString("username", "").equals("")) {
-            Toast.makeText(mContext, getResources().getString(R.string.welcomeBackUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_SHORT).show();
+            // Show the Welcome Back String only if it's the firstStart
+            if (MainApplication.firstStart) {
+                Toast.makeText(mContext, getResources().getString(R.string.welcomeBackUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_SHORT).show();
+            }
+            // Hide login and show logout
             navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
             navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
+            // Show the navMenu items that require being logged in
+            navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(true);
+            navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(true);
+            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(true);
+        } else {
+            // Hide logout and show login
+            navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
+            navigationView.getMenu().findItem(R.id.navLogout).setVisible(false);
+            // Hide the navMenu items that require being logged in
+            navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
+            navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
+            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(false);
         }
         // Set the navigation view listener to navigate between views
         navigationView.setNavigationItemSelectedListener(this);
@@ -176,18 +193,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Refresh the articles
             getLatestArticlesFromWebService(ARTICLES_URL);
         } else if (id == R.id.navLogin) {
-            // Show the login view
+            // Show the login activity
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST);
         } else if (id == R.id.navLogout){
             // Set the login action as visible and hide this action
             navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
             navigationView.getMenu().findItem(R.id.navLogout).setVisible(false);
+            // Hide the navMenu items that require being logged in
+            navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
+            navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
+            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(false);
             // Call the LogoutAsyncTask with the url and token to log the user out
             new LogoutAsyncTask().execute(LOGOUT_URL, mSharedPrefs.getString("token", ""));
-            // Delete the API Token and the username from the SharedPreferences file as well
+            // Delete the API Token, username and teamName from the SharedPreferences file as well
             mSharedPrefs.edit().putString("token", "").apply();
             mSharedPrefs.edit().putString("username", "").apply();
+            mSharedPrefs.edit().putString("teamName", "").apply();
+            // Delete the tables from the database that pertain to the user
+            DatabaseHelper mDatabaseHelper = new DatabaseHelper(mContext);
+            mDatabaseHelper.deleteAllObjects(DatabaseHelper.TABLE_NAME_TEAM);
+            mDatabaseHelper.close();
+        } else if (id == R.id.navMyTeam){
+            // Start the Roster activity
+            Intent intent = new Intent(mContext, RosterActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -208,6 +238,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Hide the login navMenu item and show the logout action
                 navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
                 navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
+                // Show the navMenu items that require being logged in
+                navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(true);
+                navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(true);
+                navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(true);
                 // Display a welcome message to the user
                 Toast.makeText(mContext, getResources().getString(R.string.welcomeUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_LONG).show();
             }
