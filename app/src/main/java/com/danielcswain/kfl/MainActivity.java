@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ProgressBar mProgressBar;
     public final String SHARED_PREFS_NAME = "com.danielcswain.kfl.sharedPreferences";
     public static SharedPreferences mSharedPrefs;
-    private NavigationView navigationView;
+    public static NavigationView navigationView;
     private static final int LOGIN_ACTIVITY_REQUEST = 1;
 
     public static final String LOGIN_URL = "http://www.kfl.com.au/rest-auth/login/";
@@ -194,23 +194,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST);
         } else if (id == R.id.navLogout){
-            // Set the login action as visible and hide this action
-            navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
-            navigationView.getMenu().findItem(R.id.navLogout).setVisible(false);
-            // Hide the navMenu items that require being logged in
-            navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
-            navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
-            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(false);
             // Call the LogoutAsyncTask with the url and token to log the user out
             new LogoutAsyncTask().execute(LOGOUT_URL, mSharedPrefs.getString("token", ""));
-            // Delete the API Token, username and teamName from the SharedPreferences file as well
-            mSharedPrefs.edit().putString("token", "").apply();
-            mSharedPrefs.edit().putString("username", "").apply();
-            mSharedPrefs.edit().putString("teamName", "").apply();
-            // Delete the tables from the database that pertain to the user
-            DatabaseHelper mDatabaseHelper = new DatabaseHelper(mContext);
-            mDatabaseHelper.deleteAllObjects(DatabaseHelper.TABLE_NAME_TEAM);
-            mDatabaseHelper.close();
         } else if (id == R.id.navMyTeam){
             // Start the Roster activity
             Intent intent = new Intent(mContext, RosterActivity.class);
