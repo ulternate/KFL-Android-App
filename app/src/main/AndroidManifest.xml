@@ -26,8 +26,10 @@
         </activity>
 
         <!-- The Article Activity, this views an individual Article -->
-        <activity android:name=".ArticleActivity"
+        <activity
+            android:name=".ArticleActivity"
             android:label="@string/articleActivityName">
+
             <!-- Parent activity meta-data to support 4.0 and lower back button -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -35,8 +37,10 @@
         </activity>
 
         <!-- The login activity, this allows users to login via the /rest-auth/login api endpoint to get a user token -->
-        <activity android:name=".LoginActivity"
-                  android:label="@string/loginActivityName">
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/loginActivityName">
+
             <!-- Parent activity meta-data to support 4.0 and lower back button -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -44,8 +48,21 @@
         </activity>
 
         <!-- The Roster activity, this shows the user what players they have in their roster -->
-        <activity android:name=".RosterActivity"
-                  android:label="@string/rosterActivityName">
+        <activity
+            android:name=".RosterActivity"
+            android:label="@string/rosterActivityName">
+
+            <!-- Parent activity meta-data to support 4.0 and lower back button -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <!-- The Selection Activity, this shows the user what players they have currently selected -->
+        <activity
+            android:name=".SelectionActivity"
+            android:label="@string/selectionActivityName">
+
             <!-- Parent activity meta-data to support 4.0 and lower back button -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

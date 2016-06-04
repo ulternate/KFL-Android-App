@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         } else if (id == R.id.navSelectTeam){
             // Start the Select Team Activity
+            Intent intent = new Intent(mContext, SelectionActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);

@@ -35,4 +35,7 @@
     <string name="rosterActivityName">My Roster</string>
     <string name="loggedOutFailed">Log out failed, please try again.</string>
     <string name="loggedOutUnauthorised">Unable to log out as your not logged in, or are using a token that is no longer valid. Please log in again.</string>
+    <string name="selectionActivityName">Selected Players</string>
+    <string name="editSelections">Edit Selections</string>
+    <string name="actionSelectionsEdit">Edit Selections</string>
 </resources>
