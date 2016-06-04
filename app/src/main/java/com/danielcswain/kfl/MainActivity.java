@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Show the navMenu items that require being logged in
             navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(true);
             navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(true);
-            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(true);
         } else {
             // Hide logout and show login
             navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
@@ -133,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Hide the navMenu items that require being logged in
             navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
             navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
-            navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(false);
         }
         // Set the navigation view listener to navigate between views
         navigationView.setNavigationItemSelectedListener(this);
@@ -200,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Start the Roster activity
             Intent intent = new Intent(mContext, RosterActivity.class);
             startActivity(intent);
+        } else if (id == R.id.navSelectTeam){
+            // Start the Select Team Activity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -223,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Show the navMenu items that require being logged in
                 navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(true);
                 navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(true);
-                navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(true);
                 // Display a welcome message to the user
                 Toast.makeText(mContext, getResources().getString(R.string.welcomeUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_LONG).show();
             }

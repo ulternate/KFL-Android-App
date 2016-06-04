@@ -142,6 +142,5 @@ public class LogoutAsyncTask extends AsyncTask<String, Void, Void> {
         // Hide the navMenu items that require being logged in
         MainActivity.navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
         MainActivity.navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
-        MainActivity.navigationView.getMenu().findItem(R.id.navSelectReserves).setVisible(false);
     }
 }
