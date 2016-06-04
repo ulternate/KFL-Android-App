@@ -21,14 +21,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Created by Daniel Swain (ulternate) 03/06/2016
+ *
+ * Activity class for the 'My Roster' activity, used to show the user's player roster that they
+ * can pick from in the SelectTeamActivity. This uses the http://www.kfl.com.au/api/user_team endpoint.
+ *
+ * Methods:
+ *  onCreate: set the layout, connect our RosterListAdapter to the ListView and get the team
+ *      roster from the Database, whilst also checking for new players from the WebService (which
+ *      will only add new players to the local database).
+ *
+ * Inner Classes:
+ *  RosterAsyncTask: A private class that extends the AsyncTask class and implements the doInBackground
+ *      and onPostExecute methods to connect to the WebService using the /api/user_team endpoint and
+ *      parse the JSONArray into valid PlayerObjects and put any new ones into the database.
+ */
 public class RosterActivity extends AppCompatActivity {
 
-    public static RosterListAdapter mAdapter;
-    public static ListView mListView;
+    // Static variables
+    private static RosterListAdapter mAdapter;
+    private static ListView mListView;
     private static ProgressBar mProgressBar;
     private static TextView mProgressText;
     private static TextView mTeamName;
 
+    /**
+     * Called each time the Activity is created, set the view, connect the ListView and RosterListAdapter
+     * and get the Users player roster from the database and check the WebService for new players.
+     * @param savedInstanceState the information bundle saved by the system when the activity instance is destroyed
+     *                           containing information about the activity's view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +91,24 @@ public class RosterActivity extends AppCompatActivity {
         // Get the user's player roster using the nested private RosterAsyncTask class and the user's
         // apiToken from the shared preferences file
         String apiToken = MainActivity.mSharedPrefs.getString("token", "");
-        new RosterAsyncTask().execute(MainActivity.TEAM_URL, apiToken);
+        if (!apiToken.equals("")) {
+            // Get the latest roster from the WebService, only if there exists a token for the User
+            new RosterAsyncTask().execute(MainActivity.TEAM_URL, apiToken);
+        }
     }
 
+    /**
+     * Private Inner class that extends the AsyncTask class to connect to the WebService in the background
+     * and get back a JSONArray of the users playerObjects
+     */
     private class RosterAsyncTask extends AsyncTask<String, Void, JSONArray>{
 
+        /**
+         * Connect to the WebService using the JSONParser helper class and get back a JSONArray of user's players
+         * @param args the list ofarguments required for the JSONParser.makeHttpRequest method.
+         *             In this case they are (WebService URL, API Token)
+         * @return JSONArray is returned if successful, null if not successful
+         */
         @Override
         protected JSONArray doInBackground(String... args) {
             try {
@@ -103,6 +139,11 @@ public class RosterActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Take the resulting JSONArray and add the new playerObjects to the database and our RosterListAdapter
+         * to update the ListView with the new information
+         * @param jsonArray the resulting JSONArray from the doInBackground call using JSONParser.makeHttpRequest
+         */
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             // ArrayList of new PlayerObjects
@@ -145,7 +186,6 @@ public class RosterActivity extends AppCompatActivity {
             mDatabaseHelper.close();
 
             // If we have new players then add them to the RosterListAdapter
-            Log.d("newPlayerObject.size()", String.valueOf(newPlayerObjects.size()));
             if (newPlayerObjects.size() > 0) {
                 mAdapter.addAll(newPlayerObjects);
                 // Notify the list adapter that the Data Set was changed

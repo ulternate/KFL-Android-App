@@ -3,15 +3,17 @@ package com.danielcswain.kfl.Articles;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
- * Created by ulternate on 27/05/2016.
+ * Created by Daniel Swain (ulternate) on 27/05/2016.
  *
  * A custom ArticleObject object class used by the ListView to hold an array of Articles
  * The ArticleGetHandler can return articles in a JSON
+ *
+ * methods:
+ *  ArticleObject(Strings...): Constructor for an individual ArticleObject from the given string values
+ *  ArticleObject(JSONObject): Constructor for an individual ArticleObject from the give JSONObject
+ *  get...: Get the ArticleObject value
+ *  set...(String value): set the ArticleObject value
  */
 public class ArticleObject {
 
@@ -64,14 +66,7 @@ public class ArticleObject {
             this.category = json.getString("category");
             this.author = json.getString("author");
             this.title = json.getString("title");
-            SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                Date oneWayTripDate = input.parse(json.getString("pub_date"));
-                this.postDate = output.format(oneWayTripDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            this.postDate = json.getString("pub_date");
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -19,108 +19,132 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
- * Created by ulternate on 27/05/2016.
+ * Created by Daniel Swain (ulternate) on 27/05/2016.
  *
- * Connect to a provided URL and return a JSON array
+ * Connect to a provided WebService URL using the given Method and return a JSON array if the WebService Api
+ * supports that.
+ *
+ * Methods:
+ *  makeHttpRequest(String url, String method, HashMap params): Make the http request using the provided
+ *      webservice url, the http method (GET, POST) and the params (i.e. username/password, api token, postData).
+ *      uses the HttpUrlConnection class to connect to the WebService api.
  */
 public class JSONParser {
-    static String charset = "UTF-8";
-    static HttpURLConnection conn;
-    static DataOutputStream wr;
-    static StringBuilder result;
-    static URL urlObj;
-    static JSONObject jObj = null;
-    static StringBuilder sbParams;
-    static String paramsString;
+    // Private class variables
+    private static String charset = "UTF-8";
+    private static HttpURLConnection conn;
+    private static DataOutputStream wr;
+    private static StringBuilder result;
+    private static URL urlObj;
+    private static JSONObject jObj = null;
+    private static StringBuilder sbParams;
+    private static String paramsString;
 
+    /**
+     * Make the http request to the WebService url provided with the given http method and postData params.
+     * Return a JSONArray from the WebService API (if the api returns one). This uses the HttpUrlConnection class
+     * @param url (String) the WebService API endpoint url
+     * @param method (String) the http method to use
+     * @param params (HashMap<String, String>) the postData params (i.e. username/password, api token...)
+     * @return a JSONArray from the WebService API call response
+     */
     public static JSONArray makeHttpRequest(String url, String method, HashMap<String, String> params) {
+        // String builder object to build the PostData from the provided params HashMap
         sbParams = new StringBuilder();
         int i = 0;
+        // For each key/value pair in the HashMap append it to the StringBuilder to build the PostData
         for (String key : params.keySet()) {
             try {
                 if (i != 0) {
+                    // Add & if it's the first key/value pair
                     sbParams.append("&");
                 }
-                sbParams.append(key).append("=")
-                        .append(URLEncoder.encode(params.get(key), charset));
-
+                // URL encode the params value in the desired character set (UTF-8) and append it to the PostData
+                sbParams.append(key).append("=").append(URLEncoder.encode(params.get(key), charset));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             i++;
         }
 
-        if (method.equals("POST")) {
-            // request method is POST
-            try {
-                urlObj = new URL(url);
-                conn = (HttpURLConnection) urlObj.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Accept-Charset", charset);
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.connect();
-                paramsString = sbParams.toString();
-                wr = new DataOutputStream(conn.getOutputStream());
-                wr.writeBytes(paramsString);
-                wr.flush();
-                wr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (method.equals("GET")) {
-            // request method is GET
-            if (sbParams.length() != 0) {
-                url += "?" + sbParams.toString();
-            }
-            try {
-                urlObj = new URL(url);
-                conn = (HttpURLConnection) urlObj.openConnection();
-                conn.setDoOutput(false);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept-Charset", charset);
-                conn.setConnectTimeout(15000);
-                conn.connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        // Switch statement to perform the HttpUrlConnection based upon the provided method string
+        switch (method) {
+            case "POST":
+                // request method is POST and doesn't require the API token
+                try {
+                    urlObj = new URL(url);
+                    // Build the HttpURLConnection object with the POST method
+                    conn = (HttpURLConnection) urlObj.openConnection();
+                    conn.setDoOutput(true);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestProperty("Accept-Charset", charset);
+                    conn.setReadTimeout(10000);
+                    conn.setConnectTimeout(15000);
+                    conn.connect();
+                    // Get the PostData from our params and add them to the dataOutputStream
+                    paramsString = sbParams.toString();
+                    wr = new DataOutputStream(conn.getOutputStream());
+                    wr.writeBytes(paramsString);
+                    wr.flush();
+                    wr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "GET":
+                // request method is GET and doesn't require the API token (but can use other postData)
+                if (sbParams.length() != 0) {
+                    // Build the url to include the postData params
+                    url += "?" + sbParams.toString();
+                }
+                try {
+                    urlObj = new URL(url);
+                    // Build the HttpURLConnection object with the GET method and provided postData params
+                    conn = (HttpURLConnection) urlObj.openConnection();
+                    conn.setDoOutput(false);
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept-Charset", charset);
+                    conn.setConnectTimeout(15000);
+                    conn.connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-        } else if (method.equals("GET AUTH")){
-            String apiToken = "";
-            if (sbParams.length() != 0){
-                Log.d("GET AUTH PARAMs", sbParams.toString());
-                apiToken = sbParams.toString().split(" =")[1];
-                Log.d("GET AUTH TOKEN", apiToken);
-            }
-            try {
-                urlObj = new URL(url);
-                conn = (HttpURLConnection) urlObj.openConnection();
-                conn.setDoOutput(false);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Authorization", "Token " + apiToken);
-                conn.setRequestProperty("Accept-Charset", charset);
-                conn.setConnectTimeout(15000);
-                Log.d("conn header", conn.getHeaderFields().toString());
-                conn.connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                break;
+            case "GET AUTH":
+                // Request method is GET, but it needs to use the API token as its an authenticated endpoint
+                String apiToken = "";
+                // Grab the apiToken from the postData params as it needs to go into the connection header
+                if (sbParams.length() != 0) {
+                    // sbParams is formatted as "token =APITokenValue". Need to split via " =" and grab just the token value
+                    apiToken = sbParams.toString().split(" =")[1];
+                }
+                try {
+                    urlObj = new URL(url);
+                    // Build the HttpURLConnection object with the GET method and add the authorization token to the header.
+                    conn = (HttpURLConnection) urlObj.openConnection();
+                    conn.setDoOutput(false);
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Authorization", "Token " + apiToken);
+                    conn.setRequestProperty("Accept-Charset", charset);
+                    conn.setConnectTimeout(15000);
+                    conn.connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
-        try {
-            Log.d("response", conn.getResponseMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        // Handle the response from the WebService api call
         try {
             //Receive the response from the server
             InputStream in = new BufferedInputStream(conn.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            // Build the result using the StringBuilder class
             result = new StringBuilder();
             String line;
+            // For each line from the response append it to the result using the StringBuilder
             while ((line = reader.readLine()) != null) {
                 result.append(line);
             }
@@ -128,26 +152,30 @@ public class JSONParser {
             e.printStackTrace();
         }
 
+        // Close the connection now we have the result
         conn.disconnect();
 
-        // Return the JSON Array result
+        // The JSONArray object that will be returned
         JSONArray jsonArray = null;
         try {
+            // Parse the HttpURLConnection result to a JSONArray
             jsonArray = new JSONArray(result.toString());
             Log.d("jsonResponse", jsonArray.toString());
         } catch (JSONException e) {
             try{
-                // In case we don't get an array, but just a JSON object, then lets add it into a json Array
+                // Try if response isn't an array, but just a single JSON object, then add it into a JSONArray
                 JSONObject jsonObject = new JSONObject(result.toString());
                 jsonArray = new JSONArray();
                 jsonArray.put(jsonObject);
                 Log.d("jsonResponseObject", jsonArray.toString());
             }catch (JSONException p){
+                // Bundle up both exceptions for logging/error checking purposes
                 p.printStackTrace();
                 e.printStackTrace();
             }
         }
 
+        // Return the JSONArray from the WebService (or null)
         return jsonArray;
     }
 }

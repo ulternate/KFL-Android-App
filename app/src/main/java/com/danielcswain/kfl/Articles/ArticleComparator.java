@@ -11,7 +11,7 @@ import java.util.Comparator;
  */
 public class ArticleComparator implements Comparator<ArticleObject> {
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
     public int compare(ArticleObject lhs, ArticleObject rhs) {

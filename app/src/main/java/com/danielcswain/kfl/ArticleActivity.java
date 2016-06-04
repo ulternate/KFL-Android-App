@@ -9,8 +9,30 @@ import android.widget.TextView;
 
 import com.danielcswain.kfl.AsyncHandlers.DownloadImageTask;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Created By Daniel Swain (ulternate)
+ *
+ * Activity that shows an individual article from the WebService API endpoint /api/articles
+ *
+ * Methods:
+ *  onCreate: set the layout and fill the textViews and ImageViews
+ *
+ * Uses the following classes:
+ *  DownloadImageTask: This asynchronous image loading class is used to perform the image download in the background
+ *      for the Article header image. This is because the article image data is just a url and the image is not
+ *      saved in the application data. Image loading via a url cannot be done on the Main UI thread.
+ */
 public class ArticleActivity extends AppCompatActivity {
 
+    /**
+     * Create the ArticleObject layout
+     * @param savedInstanceState the information bundle saved by the system when the activity instance is destroyed
+     *                           containing information about the activity's view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,14 +47,30 @@ public class ArticleActivity extends AppCompatActivity {
         TextView tvDate = (TextView) findViewById(R.id.pubDate);
         WebView webView = (WebView) findViewById(R.id.webView);
 
-        // Fill the text view's with the content for the view
+        // Assert that the textViews exist and aren't null
         assert tvTitle != null;
         assert tvAuthor != null;
         assert tvDate != null;
         assert webView != null;
+
+        // Fill the text view's with the content for the view
         tvTitle.setText(intent.getStringExtra("title"));
         tvAuthor.setText(intent.getStringExtra("author"));
-        tvDate.setText(intent.getStringExtra("pubDate"));
+
+        // Show the postDate in a nicer format using SimpleDateFormat to parse ArticleObject.postDate
+        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
+        // Try and parse the postDate and convert it into the output format.
+        try {
+            Date oneWayTripDate = input.parse(intent.getStringExtra("pubDate"));
+            // If successful in parsing the Date, then set the textView to the nicer format)
+            tvDate.setText(output.format(oneWayTripDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            // The parsing of the date was unsuccessful so just use the default database value (that's not formatted)
+            tvDate.setText(intent.getStringExtra("pubDate"));
+        }
+
         // Use an embedded webView for the longText as the site content is actually formatted using html inside the longText
         // Html.fromHtml isn't good enough in this situation as it doesn't support all Html element types
         webView.loadData(intent.getStringExtra("longText"), "text/html; charset=UTF-8", null);

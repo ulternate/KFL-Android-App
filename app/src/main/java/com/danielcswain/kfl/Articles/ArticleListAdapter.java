@@ -12,12 +12,21 @@ import android.widget.TextView;
 import com.danielcswain.kfl.MainActivity;
 import com.danielcswain.kfl.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
- * Created by ulternate on 27/05/2016.
+ * Created by Daniel Swain (ulternate) on 27/05/2016.
  *
- * Out ListAdapter for our Articles class
+ * The ListAdapter for the ArticleObject class that is used by MainActivity to fill the ListView
+ *
+ * Methods:
+ *  ArticleListAdapter(Context cntxt, ArrayList articleObjects): Constructor for ArrayAdapter with the given
+ *      ArrayList of ArticleObjects
+ *  getView: Get the view for an individual ArrayList articleObject item. This inflates article_item.xml and fills
+ *      the view with the details from the appropriate ArticleObject
  */
 public class ArticleListAdapter extends ArrayAdapter<ArticleObject>{
 
@@ -59,7 +68,20 @@ public class ArticleListAdapter extends ArrayAdapter<ArticleObject>{
         // Populate the data into the template view using the data object
         tvTitle.setText(articleObject.title);
         tvAuthor.setText(articleObject.author);
-        tvDate.setText(articleObject.postDate);
+        // Show the postDate in a nicer format using SimpleDateFormat to parse ArticleObject.postDate
+        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
+        // Try and parse the postDate and convert it into the output format.
+        try {
+            Date oneWayTripDate = input.parse(articleObject.postDate);
+            // If successful in parsing the Date, then set the textView to the nicer format)
+            tvDate.setText(output.format(oneWayTripDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            // The parsing of the date was unsuccessful so just use the default database value (that's not formatted)
+            tvDate.setText(articleObject.postDate);
+        }
+
         // Some of the summary text contains html objects like mailTo links, so using Html.fromHtml for the summary
         tvSummary.setText(Html.fromHtml(articleObject.summary));
 

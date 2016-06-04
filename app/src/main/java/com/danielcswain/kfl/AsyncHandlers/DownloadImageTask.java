@@ -1,7 +1,7 @@
 package com.danielcswain.kfl.AsyncHandlers;
 
 /**
- * Created by ulternate on 27/05/2016.
+ * Created by Daniel Swain (ulternate) on 27/05/2016.
  *
  * Async task to download an image from a url and load it into an ImageView
  */

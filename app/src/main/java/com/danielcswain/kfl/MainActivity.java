@@ -25,8 +25,6 @@ import com.danielcswain.kfl.AsyncHandlers.ArticleGetHandler;
 import com.danielcswain.kfl.AsyncHandlers.LogoutAsyncTask;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -146,9 +144,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Show the progressBar
         assert mProgressBar != null;
         mProgressBar.setVisibility(View.VISIBLE);
-        // Load the json array through the web service api
-        JSONArray json = null;
-        new ArticleGetHandler(json).execute(url);
+        // Get the latest ArticleObjects from the WebService
+        new ArticleGetHandler().execute(url);
     }
 
     @Override
