@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.danielcswain.kfl.Articles.ArticleObject;
 import com.danielcswain.kfl.Teams.PlayerObject;
+import com.danielcswain.kfl.Teams.SelectionObject;
 
 import java.util.ArrayList;
 
@@ -26,10 +27,16 @@ import java.util.ArrayList;
  *      This calls doesArticleExist(ArticleObject obj) internally to only ensure a unique Article is added.
  *  doesArticleExist(ArticleObject obj): Check to see if the provided ArticleObject exists already in the db.
  *      Returns boolean (true or false).
+ *  getPlayer(String playerName): Gets a single PlayerObject from the provided playerName.
  *  getPlayers(): Get all the players from the database as an ArrayList<PlayerObject>().
  *  addPlayer(PlayerObject obj): Add a single PlayerObject to the database.
  *      This calls doesPlayerExist(PlayerObject obj) internally to only ensure a unique Player is added.
  *  doesPlayerExist(PlayerObject obj): Check to see if the provided PlayerObject exists in the db already.
+ *      Returns boolean (true or false).
+ *  getSelections(): Get all the selectedPlayers from the database as an ArrayList<SelectionObject>().
+ *  addSelection(SelectionObject obj): Add a single SelectionObject to the database.
+ *      This calls doesSelectionExist(SelectionObject obj) internally to only ensure a unique SelectionObject is added.
+ *  doesSelectionExist(SelectionObject obj): Check to see if the provided SelectionObject exists in the db already.
  *      Returns boolean (true or false).
  *  deleteAllObjects(String tableName): Delete all records from the provided table. Used when logging the user out.
  */
@@ -266,6 +273,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Get a playerObject from the provided playerName
+     * @param playerName the name of the Player to grab
+     * @return a PlayerObject matching the provided playerName
+     */
+    public PlayerObject getPlayer(String playerName){
+        // The PlayerObject to return
+        PlayerObject playerObject = null;
+        // Get a read only connection to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+        // The columns the query is performed over
+        String[] columns = {
+                COLUMN_NAME_PLAYER_NAME,
+                COLUMN_NAME_PLAYER_AFL_TEAM
+        };
+        // The SQL query columns to check the values in
+        String selection = COLUMN_NAME_PLAYER_NAME + "=?";
+        // The values being used for the query
+        String[] arguments = {
+                playerName
+        };
+        // Perform the query and return any matching rows from the database
+        Cursor cursor = db.query(TABLE_NAME_TEAM, columns, selection, arguments, null, null, null);
+        // If the cursor produced a valid result then create and send back the playerObject
+        if (cursor != null){
+            if (cursor.moveToFirst()){
+                String aflTeam = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_AFL_TEAM));
+                playerObject = new PlayerObject(playerName, aflTeam);
+            }
+        }
+        // Return the playerObject, which can be null
+        return playerObject;
+    }
+
+    /**
      * Get an ArrayList of PlayerObjects from the Database
      * @return an ArrayList of PlayerObjects
      */
@@ -346,6 +387,107 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         };
         // Perform the query and return any matching rows from the database
         Cursor cursor = db.query(TABLE_NAME_TEAM, columns, selection, arguments, null, null, null);
+        // If the cursor.getCount > 0 then the PlayerObject exists, otherwise it doesn't
+        if (cursor.getCount() <= 0){
+            // Close the connection to the cursor to avoid memory leaks and return false (doesNotExist)
+            cursor.close();
+            return false;
+        } else {
+            // Close the connection to the cursor to avoid memory leaks and return true (doesExist)
+            cursor.close();
+            return true;
+        }
+    }
+
+    /**
+     * Get an ArrayList of SelectionObjects from the database
+     * @return an ArrayList of SelectionObjects
+     */
+    public ArrayList<SelectionObject> getSelections(){
+        // The ArrayList that will be returned
+        ArrayList<SelectionObject> selectionObjects = new ArrayList<>();
+        // Get a read only connection to the database.
+        SQLiteDatabase db = this.getReadableDatabase();
+        // The database query
+        String query = "SELECT * FROM " + TABLE_NAME_SELECTED_TEAM;
+        // Get the rows from the database that match the SQL query
+        Cursor cursor = db.rawQuery(query, null);
+        // If we have a result(s) then populate the ArrayList
+        if (cursor != null){
+            if (cursor.moveToFirst()){
+                do{
+                    // Get the strings/values from the database
+                    String playerName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_NAME));
+                    String aflTeam = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_AFL_TEAM));
+                    String position = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_POSITION));
+                    int number = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_PLAYER_NUM));
+                    // Add a SelectionObject to our ArrayList
+                    selectionObjects.add(new SelectionObject(new PlayerObject(playerName, aflTeam), position, number));
+                } while (cursor.moveToNext());
+            }
+            // Close the cursor and database connection to avoid memory leaks
+            cursor.close();
+            db.close();
+        } else {
+            // The database didn't have any matching data, close the connection to avoid memory leaks
+            db.close();
+        }
+        // Return the ArrayList of SelectionObjects (or an empty list).
+        return selectionObjects;
+    }
+
+    /**
+     * Add an individual unique selectionObject to the database
+     * This also will update an existing selectionObject if one exists already (TODO)
+     * @param selectionObject the SelectionObject to be added
+     */
+    public void addSelection(SelectionObject selectionObject){
+        // Get a writable connection to the database
+        SQLiteDatabase db = this.getWritableDatabase();
+        // If the SelectionObject doesn't exist then add it to the database
+        if(!doesSelectionExist(selectionObject)){
+            // Create the ContentValues object which will hold the new database values for the PlayerObject
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_NAME_PLAYER_NAME, selectionObject.getPlayerObject().getName());
+            values.put(COLUMN_NAME_PLAYER_AFL_TEAM, selectionObject.getPlayerObject().getTeam());
+            values.put(COLUMN_NAME_PLAYER_NUM, selectionObject.getNumber());
+            values.put(COLUMN_NAME_PLAYER_POSITION, selectionObject.getPosition());
+            values.put(COLUMN_NAME_PLAYER_POSITION_NUM, selectionObject.getNumber());
+            // Insert the SelectionObject into the database
+            db.insert(TABLE_NAME_SELECTED_TEAM, null, values);
+            // Close the connection to the database to minimise memory leaks
+            db.close();
+        } else {
+            // The selection exists so we don't add it. Close the connection to the database to minimise memory leaks.
+            // TODO make this handle the update of the existing selection
+            db.close();
+        }
+    }
+
+    /**
+     * Check to see if the SelectionObject provided already exists in the database
+     * @param selectionObject the SelectionObject query
+     * @return true or false depending on whether the SelectionObject exists in the database or not
+     */
+    public boolean doesSelectionExist(SelectionObject selectionObject){
+        // Get a read only connection to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+        // The columns the query is performed over (We're only concerned about the player num and position num
+        // As the selections can be updated, so it will update an existing record
+        String[] columns = {
+                COLUMN_NAME_PLAYER_NUM,
+                COLUMN_NAME_PLAYER_POSITION_NUM
+        };
+        // The SQL query columns to check the values in
+        String selection = COLUMN_NAME_PLAYER_NUM + "=? AND " +
+                COLUMN_NAME_PLAYER_POSITION_NUM + "=?";
+        // The values being used for the query
+        String[] arguments = {
+                String.valueOf(selectionObject.getNumber()),
+                String.valueOf(selectionObject.getNumber())
+        };
+        // Perform the query and return any matching rows from the database
+        Cursor cursor = db.query(TABLE_NAME_SELECTED_TEAM, columns, selection, arguments, null, null, null);
         // If the cursor.getCount > 0 then the PlayerObject exists, otherwise it doesn't
         if (cursor.getCount() <= 0){
             // Close the connection to the cursor to avoid memory leaks and return false (doesNotExist)

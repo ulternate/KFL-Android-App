@@ -38,4 +38,11 @@
     <string name="selectionActivityName">Selected Players</string>
     <string name="editSelections">Edit Selections</string>
     <string name="actionSelectionsEdit">Edit Selections</string>
+    <string name="playerTeamImage">Player\'s AFL Team</string>
+    <string name="ruckPosition">Ruck</string>
+    <string name="tacklerPosition">Tackler</string>
+    <string name="markerPosition">Marker</string>
+    <string name="forwardPosition">Forward</string>
+    <string name="midPosition">Midfielder</string>
+    <string name="flexPosition">Flex</string>
 </resources>

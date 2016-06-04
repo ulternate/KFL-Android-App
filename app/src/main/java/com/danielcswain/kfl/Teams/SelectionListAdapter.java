@@ -14,48 +14,73 @@ import com.danielcswain.kfl.R;
 import java.util.ArrayList;
 
 /**
- * Created by Daniel Swain (ulternate) on 3/06/2016.
+ * Created by Daniel Swain (ulternate) on 4/06/2016.
  *
- * List adapter to inflate the player_item view with the playerObjects from the User's available roster
+ * ListAdapter to inflate the selection_item.xml with the PlayerObjects representing the user's Player selections
  */
-public class RosterListAdapter extends ArrayAdapter<PlayerObject> {
+public class SelectionListAdapter extends ArrayAdapter<SelectionObject> {
 
     /**
-     * Constructor class for our RosterListAdapter
+     * Constructor class for our SelectionListAdapter
      * @param context the Application Context
-     * @param playerObjects the ArrayList<PlayerObject> containing the User's available
+     * @param selectionObjects the ArrayList<SelectionObject> containing the User's selected Players
      */
-    public RosterListAdapter(Context context, ArrayList<PlayerObject> playerObjects){
+    public SelectionListAdapter(Context context, ArrayList<SelectionObject> selectionObjects){
         // Call the super ArrayAdapter class with our array of playerObjects
         // We only override the getView method
-        super(context, 0, playerObjects);
+        super(context, 0, selectionObjects);
     }
 
     /**
-     * Override the getView for the ArrayAdapter super class to use our custom listItem layout player_item
+     * Override the getView for the ArrayAdapter super class to use our custom listItem layout selection_item
      * @param position the position in the ArrayAdapter
-     * @param convertView the view to be inflated, in this case our R.layout.player_item
+     * @param convertView the view to be inflated, in this case our R.layout.selection_item
      * @param parent the parent viewGroup that the item is in
      * @return the resulting view (in this case the finished ListItem row with playerName and AFLTeam icon)
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PlayerObject playerObject = getItem(position);
+        SelectionObject selectionObject = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.player_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.selection_item, parent, false);
         }
 
         // Get the textView for the PlayerName and PlayerTeamImage
-        TextView tvPlayerName = (TextView) convertView.findViewById(R.id.playerName);
-        ImageView ivPlayerTeamImage = (ImageView) convertView.findViewById(R.id.playerTeamImage);
+        TextView tvSelectionName = (TextView) convertView.findViewById(R.id.selectionPlayerName);
+        TextView tvSelectionPosition = (TextView) convertView.findViewById(R.id.selectionPlayerPosition);
+        ImageView ivPlayerTeamImage = (ImageView) convertView.findViewById(R.id.selectionTeamImage);
 
-        // Set the player's Name
-        tvPlayerName.setText(playerObject.getName());
+        // Set the selected player's Name
+        tvSelectionName.setText(selectionObject.getPlayerObject().getName());
+        // Set the selected player's Position (expanding from the shortcode the API uses)
+        switch (selectionObject.getPosition()){
+            case "R":
+                tvSelectionPosition.setText(R.string.ruckPosition);
+                break;
+            case "T":
+                tvSelectionPosition.setText(R.string.tacklerPosition);
+                break;
+            case "M":
+                tvSelectionPosition.setText(R.string.markerPosition);
+                break;
+            case "For":
+                tvSelectionPosition.setText(R.string.forwardPosition);
+                break;
+            case "Mid":
+                tvSelectionPosition.setText(R.string.midPosition);
+                break;
+            case "Flx":
+                tvSelectionPosition.setText(R.string.flexPosition);
+                break;
+            default:
+                tvSelectionPosition.setText(R.string.ruckPosition);
+                break;
+        }
 
-        // Set the player's AFL Team (using a switch statement for the various AFL teams (18)
-        switch (playerObject.getTeam()){
+        // Set the selected player's AFL Team (using a switch statement for the various AFL teams (18)
+        switch (selectionObject.getPlayerObject().getTeam()){
             case "AD":
             case "Adelaide Crows":
             case "Adelaide":

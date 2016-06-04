@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String LOGOUT_URL = "http://www.kfl.com.au/rest-auth/logout/";
     public static final String ARTICLES_URL = "http://www.kfl.com.au/api/articles/";
     public static final String TEAM_URL = "http://www.kfl.com.au/api/user_team/";
+    public static final String SELECTION_URL = "http://www.kfl.com.au/api/selected_team/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
