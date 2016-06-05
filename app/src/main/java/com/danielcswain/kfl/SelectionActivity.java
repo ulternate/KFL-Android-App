@@ -190,6 +190,8 @@ public class SelectionActivity extends AppCompatActivity {
             DatabaseHelper mDatabaseHelper = new DatabaseHelper(MainActivity.mContext);
             // Blank teamName so we can reference it outside the try/catch block
             String teamName = "";
+            // Blank int selectionId so we can update these selections later (via the selectionId)
+            int selectionId = 0;
             // We have the player objects for the user and their team name so lets add them to the database and
             // update the listView with the new information
             try{
@@ -198,6 +200,8 @@ public class SelectionActivity extends AppCompatActivity {
                 JSONObject team = jsonArray.getJSONObject(0);
                 // Get the team name from the team JSONObject
                 teamName = team.getString("team");
+                // Get the selectionId from the team JSONObject
+                selectionId = team.getInt("id");
                 // Create a selection object for each player
                 for (int i = 1; i < 15; i++){
                     String player = team.getString("player" + String.valueOf(i));
@@ -235,8 +239,8 @@ public class SelectionActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.GONE);
             mProgressText.setText(teamName);
 
-            // Save the fact the user has selections into the SharedPreference file
-            MainActivity.mSharedPrefs.edit().putString("selection", teamName).apply();
+            // Save the selectionId in the database
+            MainActivity.mSharedPrefs.edit().putInt("selectionId", selectionId).apply();
         }
     }
 }
