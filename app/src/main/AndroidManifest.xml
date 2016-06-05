@@ -68,6 +68,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+
+        <!-- The Edit Selections Activity, this allows a user to edit their selected players and send it to the
+            WebService -->
+        <activity
+            android:name=".SelectionEditActivity"
+            android:label="@string/selectionEditActivityName"
+            >
+
+            <!-- Parent activity meta-data to support 4.0 and lower back button, in this case going back to
+                the SelectionActivity which is the calling activity -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SelectionActivity"/>
+        </activity>
     </application>
 
 </manifest>

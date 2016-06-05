@@ -1,5 +1,6 @@
 package com.danielcswain.kfl;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,10 +47,9 @@ import java.util.HashMap;
 public class SelectionActivity extends AppCompatActivity {
 
     private SelectionListAdapter mAdapter;
-    private ListView mListView;
     private ProgressBar mProgressBar;
     private TextView mProgressText;
-    private TextView mTeamName;
+    private static final int EDIT_SELECTIONS = 1;
 
     /**
      * Create and initiate the activity layout.
@@ -66,7 +66,7 @@ public class SelectionActivity extends AppCompatActivity {
         // Connect our SelectionObjects array to the ListView adapter
         mAdapter = new SelectionListAdapter(this, selectionObjects);
         // Attach the adapter to the ListView
-        mListView = (ListView) findViewById(R.id.selectionListView);
+        ListView mListView = (ListView) findViewById(R.id.selectionListView);
         if (mListView != null) {
             mListView.setAdapter(mAdapter);
         }
@@ -128,7 +128,8 @@ public class SelectionActivity extends AppCompatActivity {
         // Handle the item selection, in this case, if it's actionSelectionsEdit then it will allow users to edit
         // their selections (not currently implemented)
         if (id == R.id.actionSelectionsEdit) {
-            Toast.makeText(getApplicationContext(), "Currently you can't edit your selections", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), SelectionEditActivity.class);
+            startActivityForResult(intent, EDIT_SELECTIONS);
             return true;
         }
 
@@ -233,7 +234,7 @@ public class SelectionActivity extends AppCompatActivity {
             // Hide the loading progressBar and change the ProgressText from "Loading" to the teamName
             mProgressBar.setVisibility(View.GONE);
             mProgressText.setText(teamName);
-            
+
             // Save the fact the user has selections into the SharedPreference file
             MainActivity.mSharedPrefs.edit().putString("selection", teamName).apply();
         }
