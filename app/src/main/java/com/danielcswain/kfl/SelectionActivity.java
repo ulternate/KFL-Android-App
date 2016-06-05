@@ -179,14 +179,12 @@ public class SelectionActivity extends AppCompatActivity {
         }
 
         /**
-         * Take the resulting JSONArray and add the new SelectionObjects to the database and our SelectionListAdapter
-         * to update the ListView with the new information
+         * Take the resulting JSONArray and add the new/updated SelectionObjects to the database and the
+         * SelectionListAdapter to update the ListView with the new information
          * @param jsonArray the resulting JSONArray from the doInBackground call using JSONParser.makeHttpRequest
          */
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
-            // ArrayList of new PlayerObjects
-            ArrayList<SelectionObject> newSelectionObjects = new ArrayList<>();
             // Get an instance of our DatabaseHelper so we can add the items from the JSONArray to the db
             DatabaseHelper mDatabaseHelper = new DatabaseHelper(MainActivity.mContext);
             // Blank teamName so we can reference it outside the try/catch block
@@ -213,11 +211,7 @@ public class SelectionActivity extends AppCompatActivity {
                             String aflTeam = playerArray[1];
                             // Create a SelectionObject using the playerName, aflTeam, position and playerNum (from the for loop)
                             SelectionObject selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), position, i);
-                            // Add the selectionObject to the ArrayList if it doesn't exist
-                            if (!mDatabaseHelper.doesSelectionExist(selectionObject)) {
-                                newSelectionObjects.add(selectionObject);
-                            }
-                            // Try and save the selectionObject to the database (this checks for uniqueness)
+                            // Add or update the selectionObject to the database
                             mDatabaseHelper.addSelection(selectionObject);
                         }
                     }
@@ -227,15 +221,14 @@ public class SelectionActivity extends AppCompatActivity {
                 n.printStackTrace();
             }
 
+            // Get the latest selectionObjects from the database and update the SelectionListAdapter to contain
+            // the updated selections (removing the old selections)
+            mAdapter.clear();
+            mAdapter.addAll(mDatabaseHelper.getSelections());
+            mAdapter.notifyDataSetChanged();
+
             // Close the connection to the database helper to avoid memory leaks now we're finished with it
             mDatabaseHelper.close();
-
-            // If we have new players then add them to the RosterListAdapter
-            if (newSelectionObjects.size() > 0) {
-                mAdapter.addAll(newSelectionObjects);
-                // Notify the list adapter that the Data Set was changed
-                mAdapter.notifyDataSetChanged();
-            }
 
             // Hide the loading text and the progressBar
             mProgressBar.setVisibility(View.INVISIBLE);

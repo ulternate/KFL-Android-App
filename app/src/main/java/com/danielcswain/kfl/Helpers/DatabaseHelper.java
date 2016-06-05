@@ -27,7 +27,6 @@ import java.util.ArrayList;
  *      This calls doesArticleExist(ArticleObject obj) internally to only ensure a unique Article is added.
  *  doesArticleExist(ArticleObject obj): Check to see if the provided ArticleObject exists already in the db.
  *      Returns boolean (true or false).
- *  getPlayer(String playerName): Gets a single PlayerObject from the provided playerName.
  *  getPlayers(): Get all the players from the database as an ArrayList<PlayerObject>().
  *  addPlayer(PlayerObject obj): Add a single PlayerObject to the database.
  *      This calls doesPlayerExist(PlayerObject obj) internally to only ensure a unique Player is added.
@@ -273,40 +272,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Get a playerObject from the provided playerName
-     * @param playerName the name of the Player to grab
-     * @return a PlayerObject matching the provided playerName
-     */
-    public PlayerObject getPlayer(String playerName){
-        // The PlayerObject to return
-        PlayerObject playerObject = null;
-        // Get a read only connection to the database
-        SQLiteDatabase db = this.getReadableDatabase();
-        // The columns the query is performed over
-        String[] columns = {
-                COLUMN_NAME_PLAYER_NAME,
-                COLUMN_NAME_PLAYER_AFL_TEAM
-        };
-        // The SQL query columns to check the values in
-        String selection = COLUMN_NAME_PLAYER_NAME + "=?";
-        // The values being used for the query
-        String[] arguments = {
-                playerName
-        };
-        // Perform the query and return any matching rows from the database
-        Cursor cursor = db.query(TABLE_NAME_TEAM, columns, selection, arguments, null, null, null);
-        // If the cursor produced a valid result then create and send back the playerObject
-        if (cursor != null){
-            if (cursor.moveToFirst()){
-                String aflTeam = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_AFL_TEAM));
-                playerObject = new PlayerObject(playerName, aflTeam);
-            }
-        }
-        // Return the playerObject, which can be null
-        return playerObject;
-    }
-
-    /**
      * Get an ArrayList of PlayerObjects from the Database
      * @return an ArrayList of PlayerObjects
      */
@@ -436,6 +401,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return selectionObjects;
     }
 
+    public SelectionObject getSelectionAtPosition(int position){
+        // SelectionObject to be returned
+        SelectionObject selectionObject = null;
+        // Get a read only connection to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+        // The column the query will return data from
+        String[] columns = {
+                COLUMN_NAME_PLAYER_NAME,
+                COLUMN_NAME_PLAYER_AFL_TEAM,
+                COLUMN_NAME_PLAYER_POSITION,
+                COLUMN_NAME_PLAYER_NUM
+        };
+        // The selection criteria for the database query
+        String selection = COLUMN_NAME_PLAYER_NUM + "=?";
+        // The argument(s) for the database query
+        String[] arguments = {
+                String.valueOf(position)
+        };
+        // Perform the query and return any matching rows from the database
+        Cursor cursor = db.query(TABLE_NAME_SELECTED_TEAM, columns, selection, arguments, null, null, null);
+        if (cursor != null){
+            if (cursor.moveToFirst()){
+                String playerName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_NAME));
+                String aflTeam = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_AFL_TEAM));
+                String playerPosition = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PLAYER_POSITION));
+                int number = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_PLAYER_NUM));
+                selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), playerPosition, number);
+            }
+            // Close the cursor and connection to the database
+            cursor.close();
+            db.close();
+        } else {
+            // Close the connection to the database
+            db.close();
+        }
+        // Return the selectionObject (or null)
+        return selectionObject;
+    }
+
     /**
      * Add an individual unique selectionObject to the database
      * This also will update an existing selectionObject if one exists already (TODO)
@@ -458,8 +462,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // Close the connection to the database to minimise memory leaks
             db.close();
         } else {
-            // The selection exists so we don't add it. Close the connection to the database to minimise memory leaks.
-            // TODO make this handle the update of the existing selection
+            // The selection already exists, so lets update it. with the latest from the WebService (or edit action)
+            ContentValues updatedValues = new ContentValues();
+            // New values
+            updatedValues.put(COLUMN_NAME_PLAYER_NAME, selectionObject.getPlayerObject().getName());
+            updatedValues.put(COLUMN_NAME_PLAYER_AFL_TEAM, selectionObject.getPlayerObject().getTeam());
+            updatedValues.put(COLUMN_NAME_PLAYER_NUM, selectionObject.getNumber());
+            updatedValues.put(COLUMN_NAME_PLAYER_POSITION, selectionObject.getPosition());
+            updatedValues.put(COLUMN_NAME_PLAYER_POSITION_NUM, selectionObject.getNumber());
+            // Columns to search for the old row (so the correct row is updated)
+            String whereClause = COLUMN_NAME_PLAYER_NUM + "=? AND " +
+                    COLUMN_NAME_PLAYER_POSITION_NUM + "=?";
+            String[] whereArgs = {
+                    String.valueOf(selectionObject.getNumber()),
+                    String.valueOf(selectionObject.getNumber())
+            };
+            // Update the SelectionObject in the database row
+            db.update(TABLE_NAME_SELECTED_TEAM, updatedValues, whereClause, whereArgs);
+            // Close the connection to the database to minimise memory leaks
             db.close();
         }
     }
