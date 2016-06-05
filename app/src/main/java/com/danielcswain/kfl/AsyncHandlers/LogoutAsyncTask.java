@@ -128,13 +128,15 @@ public class LogoutAsyncTask extends AsyncTask<String, Void, Void> {
      * Also, remove any user info from the database and the sharedPreference file
      */
     private void resetViewAndUserData(){
-        // Delete the API Token, username and teamName from the SharedPreferences file as well
+        // Delete the API Token, username, teamName and selection from the SharedPreferences file as well
         MainActivity.mSharedPrefs.edit().putString("token", "").apply();
         MainActivity.mSharedPrefs.edit().putString("username", "").apply();
         MainActivity.mSharedPrefs.edit().putString("teamName", "").apply();
+        MainActivity.mSharedPrefs.edit().putString("selection", "").apply();
         // Delete the tables from the database that pertain to the user
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(MainActivity.mContext);
         mDatabaseHelper.deleteAllObjects(DatabaseHelper.TABLE_NAME_TEAM);
+        mDatabaseHelper.deleteAllObjects(DatabaseHelper.TABLE_NAME_SELECTED_TEAM);
         mDatabaseHelper.close();
         // Set the login action as visible and hide this action
         MainActivity.navigationView.getMenu().findItem(R.id.navLogin).setVisible(true);
