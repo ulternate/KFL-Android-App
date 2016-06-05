@@ -45,4 +45,5 @@
     <string name="forwardPosition">Forward</string>
     <string name="midPosition">Midfielder</string>
     <string name="flexPosition">Flex</string>
+    <string name="noAPI">No user api token detected. You need to login to access this activity</string>
 </resources>

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.danielcswain.kfl.AsyncHandlers.LogoutAsyncTask;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Helpers.JSONParser;
 import com.danielcswain.kfl.Teams.PlayerObject;
@@ -69,21 +70,9 @@ public class SelectionActivity extends AppCompatActivity {
         if (mListView != null) {
             mListView.setAdapter(mAdapter);
         }
-        // Get the loading text and progress bar and teamName textview
+        // Get the loading text and progress bar layout objects
         mProgressBar = (ProgressBar) findViewById(R.id.selectionLoadingBar);
         mProgressText = (TextView) findViewById(R.id.selectionLoadingText);
-        mTeamName = (TextView) findViewById(R.id.selectionTeamName);
-
-        // If we have a value for the SharedPreference string "selection" other than "" then we don't need
-        // to show the loading as we've gotten the user's selections already
-        if (MainActivity.mSharedPrefs.getString("selection", "").equals("")){
-            // Set the progressBar and progressText as visible as we don't have any players for the user's selected team yet
-            mProgressBar.setVisibility(View.VISIBLE);
-            mProgressText.setVisibility(View.VISIBLE);
-        } else {
-            // Set the mTeamName to the team name as we have some selections
-            mTeamName.setText(MainActivity.mSharedPrefs.getString("teamName", ""));
-        }
 
         // Connect to the database and populate the list adapter with the existing playerObjects
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(getApplicationContext());
@@ -96,8 +85,19 @@ public class SelectionActivity extends AppCompatActivity {
         // apiToken from the shared preferences file
         String apiToken = MainActivity.mSharedPrefs.getString("token", "");
         if (!apiToken.equals("")) {
+            // Show the loadingProgressBar
+            mProgressBar.setVisibility(View.VISIBLE);
+            // Set the ProgressText to Loading (This will get updated to the teamName after the API call completes
+            mProgressText.setText(R.string.loading);
             // Get the latest roster from the WebService, only if there exists a token for the User
             new SelectionAsyncTask().execute(MainActivity.SELECTION_URL, apiToken);
+        } else {
+            // Send a toast message to the user and finish the activity as they don't have an API key
+            Toast.makeText(getApplicationContext(), R.string.noAPI, Toast.LENGTH_SHORT).show();
+            // Log the user out to make sure
+            new LogoutAsyncTask().execute(MainActivity.LOGOUT_URL);
+            // close this activity
+            finish();
         }
     }
 
@@ -230,15 +230,12 @@ public class SelectionActivity extends AppCompatActivity {
             // Close the connection to the database helper to avoid memory leaks now we're finished with it
             mDatabaseHelper.close();
 
-            // Hide the loading text and the progressBar
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressText.setVisibility(View.INVISIBLE);
-
-            // Set the TeamName textView
-            mTeamName.setText(teamName);
+            // Hide the loading progressBar and change the ProgressText from "Loading" to the teamName
+            mProgressBar.setVisibility(View.GONE);
+            mProgressText.setText(teamName);
+            
             // Save the fact the user has selections into the SharedPreference file
             MainActivity.mSharedPrefs.edit().putString("selection", teamName).apply();
-
         }
     }
 }
