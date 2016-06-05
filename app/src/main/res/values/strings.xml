@@ -47,4 +47,6 @@
     <string name="flexPosition">Flex</string>
     <string name="noAPI">No user api token detected. You need to login to access this activity</string>
     <string name="selectionEditActivityName">Edit Selections</string>
+    <string name="editSelectionsInstructions">Update your starting positions below</string>
+    <string name="selectionNoneWarn">You must select a player for all positions</string>
 </resources>

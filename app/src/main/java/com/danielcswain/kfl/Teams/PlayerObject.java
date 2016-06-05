@@ -21,6 +21,15 @@ public class PlayerObject {
     }
 
     /**
+     * Override the toString method to ensure a clean representation of the PlayerObject data
+     * @return String of the playerObject name and AFL team
+     */
+    @Override
+    public String toString() {
+        return name + " | " + team;
+    }
+
+    /**
      * getName get the player name
      * @return the name of the player object
      */

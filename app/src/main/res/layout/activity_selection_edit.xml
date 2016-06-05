@@ -1,25 +1,350 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/layout_horizontal_margin"
+    android:paddingRight="@dimen/layout_horizontal_margin"
     tools:context="com.danielcswain.kfl.SelectionEditActivity">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/editSelectionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editSelectionsInstructions"
+        />
+
+    <ScrollView
+        android:id="@+id/editSelectionScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_below="@id/editSelectionTitle"
+        android:layout_marginTop="@dimen/layout_vertical_margin">
 
-        <TextView
-            android:id="@+id/editSelectionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="24sp"
-            android:text="Testing Layout"
-            />
+        <RelativeLayout
+            android:id="@+id/editSelectionFieldContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+            <!-- Position 1 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition1"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/ruckPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"/>
 
-</ScrollView>
+            <!-- Player 1 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition1"
+                android:layout_alignTop="@+id/editSelectionPosition1"
+                />
+
+            <!-- Position 2 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition2"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/tacklerPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition1"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 2 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition2"
+                android:layout_alignTop="@+id/editSelectionPosition2"
+                />
+
+            <!-- Position 3 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition3"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/tacklerPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition2"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 3 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition3"
+                android:layout_alignTop="@+id/editSelectionPosition3"
+                />
+
+            <!-- Position 4 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition4"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/markerPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition3"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 4 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition4"
+                android:layout_alignTop="@+id/editSelectionPosition4"
+                />
+
+            <!-- Position 5 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition5"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/markerPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition4"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 5 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition5"
+                android:layout_alignTop="@+id/editSelectionPosition5"
+                />
+
+            <!-- Position 6 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition6"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/forwardPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition5"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 6 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition6"
+                android:layout_alignTop="@+id/editSelectionPosition6"
+                />
+
+            <!-- Position 7 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition7"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/forwardPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition6"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 7 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition7"
+                android:layout_alignTop="@+id/editSelectionPosition7"
+                />
+
+            <!-- Position 8 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition8"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/forwardPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition7"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 8 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition8"
+                android:layout_alignTop="@+id/editSelectionPosition8"
+                />
+
+            <!-- Position 9 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition9"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/forwardPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition8"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 9 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition9"
+                android:layout_alignTop="@+id/editSelectionPosition9"
+                />
+
+            <!-- Position 10 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition10"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/midPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition9"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 10 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition10"
+                android:layout_alignTop="@+id/editSelectionPosition10"
+                />
+
+            <!-- Position 11 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition11"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/midPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition10"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 11 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition11"
+                android:layout_alignTop="@+id/editSelectionPosition11"
+                />
+
+            <!-- Position 12 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition12"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/midPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition11"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 12 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition12"
+                android:layout_alignTop="@+id/editSelectionPosition12"
+                />
+
+            <!-- Position 13 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition13"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/midPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition12"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 13 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition13"
+                android:layout_alignTop="@+id/editSelectionPosition13"
+                />
+
+            <!-- Position 14 Title -->
+            <TextView
+                android:id="@+id/editSelectionPosition14"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/flexPosition"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_below="@id/editSelectionPosition13"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
+            <!-- Player 14 Selector -->
+            <Spinner
+                android:id="@+id/editSelectionPlayer14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/editSelectionPosition14"
+                android:layout_alignTop="@+id/editSelectionPosition14"
+                />
+
+            <Button
+                android:id="@+id/editSelectionSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/actionSubmit"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/editSelectionPosition14"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:layout_marginBottom="@dimen/layout_vertical_margin"
+                />
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
