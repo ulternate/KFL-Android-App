@@ -201,19 +201,25 @@ public class SelectionActivity extends AppCompatActivity {
                 teamName = team.getString("team");
                 // Create a selection object for each player
                 for (int i = 1; i < 15; i++){
-                    String playerName = team.getString("player" + String.valueOf(i));
+                    String player = team.getString("player" + String.valueOf(i));
                     String position = team.getString("position" + String.valueOf(i));
-                    // Get the playerObject if playerName != "null"
-                    if (!playerName.equals("null")){
-                        PlayerObject playerObject = mDatabaseHelper.getPlayer(playerName);
-                        // Create a SelectionObject
-                        SelectionObject selectionObject = new SelectionObject(playerObject, position, i);
-                        // Add the selectionObject to the ArrayList if it doesn't exist
-                        if (!mDatabaseHelper.doesSelectionExist(selectionObject)){
-                            newSelectionObjects.add(selectionObject);
+                    // Get the playerName and aflTeam from player if player != "null"
+                    if (!player.equals("null")){
+                        // Split the player string from "playerName | aflTeam" as it is sent via the webservice
+                        // Need to escape the | special character to split that and the space correctly
+                        String[] playerArray = player.split(" \\| ");
+                        if (playerArray.length == 2) {
+                            String playerName = playerArray[0];
+                            String aflTeam = playerArray[1];
+                            // Create a SelectionObject using the playerName, aflTeam, position and playerNum (from the for loop)
+                            SelectionObject selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), position, i);
+                            // Add the selectionObject to the ArrayList if it doesn't exist
+                            if (!mDatabaseHelper.doesSelectionExist(selectionObject)) {
+                                newSelectionObjects.add(selectionObject);
+                            }
+                            // Try and save the selectionObject to the database (this checks for uniqueness)
+                            mDatabaseHelper.addSelection(selectionObject);
                         }
-                        // Try and save the selectionObject to the database (this checks for uniqueness)
-                        mDatabaseHelper.addSelection(selectionObject);
                     }
                 }
             }catch(NullPointerException | JSONException n){
@@ -238,7 +244,7 @@ public class SelectionActivity extends AppCompatActivity {
             // Set the TeamName textView
             mTeamName.setText(teamName);
             // Save the fact the user has selections into the SharedPreference file
-            MainActivity.mSharedPrefs.edit().putString("selection", "true").apply();
+            MainActivity.mSharedPrefs.edit().putString("selection", teamName).apply();
 
         }
     }
