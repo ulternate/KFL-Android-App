@@ -94,7 +94,7 @@ public class SelectionActivity extends AppCompatActivity {
             // Set the ProgressText to Loading (This will get updated to the teamName after the API call completes
             mProgressText.setText(R.string.loading);
             // Get the latest roster from the WebService, only if there exists a token for the User
-            new RosterAsyncTask().execute(MainActivity.TEAM_URL, apiToken);
+            new RosterAsyncTask("SelectionActivity").execute(MainActivity.TEAM_URL, apiToken);
             // Get the latest selections from the WebService, only if there exists a token for the User
             new SelectionAsyncTask().execute(MainActivity.SELECTION_URL, apiToken);
         } else {

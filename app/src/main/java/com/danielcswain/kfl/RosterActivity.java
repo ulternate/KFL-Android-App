@@ -80,7 +80,7 @@ public class RosterActivity extends AppCompatActivity {
         String apiToken = MainActivity.mSharedPrefs.getString("token", "");
         if (!apiToken.equals("")) {
             // Get the latest roster from the WebService, only if there exists a token for the User
-            new RosterAsyncTask().execute(MainActivity.TEAM_URL, apiToken);
+            new RosterAsyncTask("RosterActivity").execute(MainActivity.TEAM_URL, apiToken);
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.danielcswain.kfl.Helpers;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +34,6 @@ public class JSONParser {
     private static DataOutputStream wr;
     private static StringBuilder result;
     private static URL urlObj;
-    private static JSONObject jObj = null;
     private static StringBuilder sbParams;
     private static String paramsString;
 
@@ -98,7 +95,6 @@ public class JSONParser {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 break;
             case "GET AUTH":
                 // Request method is GET, but it needs to use the API token as its an authenticated endpoint
@@ -128,12 +124,10 @@ public class JSONParser {
                 apiToken = params.get("token");
                 // Remove the token from the hashMap so it isn't sent in the PostData
                 params.remove("token");
-                // Get the postData containing the information being posted to the WebService as a JSON
-                JSONObject jsonParams = buildSelectionsJSONPostData(params);
                 // Build the connection using the postData and apiToken
                 try {
                     urlObj = new URL(url);
-                    // Build the HttpURLConnection object with the POST method and API Token
+                    // Build the HttpURLConnection object with the PUT method and API Token
                     conn = (HttpURLConnection) urlObj.openConnection();
                     conn.setDoOutput(true);
                     conn.setRequestMethod("PUT");
@@ -144,7 +138,8 @@ public class JSONParser {
                     conn.setReadTimeout(10000);
                     conn.setConnectTimeout(15000);
                     conn.connect();
-                    // Get the PostData from params and add them to the dataOutputStream
+                    // Get the Post JSON from the params and add them to the dataOutputStream
+                    JSONObject jsonParams = buildSelectionsJSONPostData(params);
                     paramsString = jsonParams.toString();
                     wr = new DataOutputStream(conn.getOutputStream());
                     wr.writeBytes(paramsString);
@@ -180,14 +175,12 @@ public class JSONParser {
         try {
             // Parse the HttpURLConnection result to a JSONArray
             jsonArray = new JSONArray(result.toString());
-            Log.d("jsonResponse", jsonArray.toString());
         } catch (JSONException e) {
             try{
                 // Try if response isn't an array, but just a single JSON object, then add it into a JSONArray
                 JSONObject jsonObject = new JSONObject(result.toString());
                 jsonArray = new JSONArray();
                 jsonArray.put(jsonObject);
-                Log.d("jsonResponseObject", jsonArray.toString());
             }catch (JSONException p){
                 // Bundle up both exceptions for logging/error checking purposes
                 p.printStackTrace();
@@ -199,14 +192,20 @@ public class JSONParser {
         return jsonArray;
     }
 
+    /**
+     * Build the PostData for the POST/GET action using the params HashMap from the user's info
+     * @param params the HashMap of user info/data to be encoded for the WebService request
+     * @return the resulting string builder
+     */
     private static StringBuilder buildPostData(HashMap<String, String> params){
+        // The StringBuilder object that will be returned
         StringBuilder stringBuilder = new StringBuilder();
         int i = 0;
         // For each key/value pair in the HashMap append it to the StringBuilder to build the PostData
         for (String key : params.keySet()) {
             try {
                 if (i != 0) {
-                    // Add & if it's not the first key/value pair
+                    // Add '&' if it's not the first key/value pair
                     stringBuilder.append("&");
                 }
                 // URL encode the params value in the desired character set (UTF-8) and append it to the PostData
@@ -216,18 +215,28 @@ public class JSONParser {
             }
             i++;
         }
+        // Return the postData
         return stringBuilder;
     }
 
+    /**
+     * Build a JSON object to sent the User's selection data to the WebService for the PUT call
+     * @param params the HashMap of the user's selections, to be converted into a JSONObject
+     * @return the resulting JSONObject of the user's selections
+     */
     private static JSONObject buildSelectionsJSONPostData(HashMap<String, String> params){
+        // The JSONObject that will be returned
         JSONObject jsonObject = new JSONObject();
         for(int i = 1; i < 15; i++){
             try {
+                // Create a new JSONObject for this player
                 JSONObject player = new JSONObject();
+                // The JSONObject key (needed for getting from params and putting into the final JSONObject)
                 String jsonPlayerKey = "player" + String.valueOf(i);
+                // Put the player_name and player_team values into the player JSONObject
                 player.put("player_name", params.get(jsonPlayerKey + ".player_name"));
                 player.put("player_team", params.get(jsonPlayerKey + ".player_team"));
-                // Put the player into the returning object
+                // Put the player JSONObject into the returning object
                 jsonObject.put(jsonPlayerKey, player);
                 // Put the position into the returning object
                 jsonObject.put("position" + String.valueOf(i), params.get("position" + String.valueOf(i)));
@@ -235,6 +244,7 @@ public class JSONParser {
                 e.printStackTrace();
             }
         }
+        // Return the JSONObject containing the user's selections
         return jsonObject;
     }
 }

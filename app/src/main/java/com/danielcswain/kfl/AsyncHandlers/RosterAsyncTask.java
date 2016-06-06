@@ -26,6 +26,11 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
     // Tag used for logging purposes
     private final String LOG_TAG = getClass().getSimpleName();
+    private String callingActivity;
+
+    public RosterAsyncTask(String triggeringClass){
+        this.callingActivity = triggeringClass;
+    }
 
     /**
      * Connect to the WebService using the JSONParser helper class and get back a JSONArray of user's players
@@ -35,6 +40,7 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
      */
     @Override
     protected JSONArray doInBackground(String... args) {
+
         try {
             // Build a params HashMap containing the users authentication token from
             // the SharedPreference file
@@ -109,19 +115,23 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
         // Close the connection to the database helper to avoid memory leaks now we're finished with it
         mDatabaseHelper.close();
 
-        // If we have new players then add them to the RosterListAdapter
-        if (newPlayerObjects.size() > 0) {
-            RosterActivity.mAdapter.addAll(newPlayerObjects);
-            // Notify the list adapter that the Data Set was changed
-            RosterActivity.mAdapter.notifyDataSetChanged();
+        // If the callingClass was the RosterActivity then update the views, otherwise skip this step
+        if(callingActivity.equals("RosterActivity")) {
+            // If we have new players then add them to the RosterListAdapter
+            if (newPlayerObjects.size() > 0) {
+                RosterActivity.mAdapter.addAll(newPlayerObjects);
+                // Notify the list adapter that the Data Set was changed
+                RosterActivity.mAdapter.notifyDataSetChanged();
+            }
+
+            // Hide the loading text and the progressBar
+            RosterActivity.mProgressBar.setVisibility(View.INVISIBLE);
+            RosterActivity.mProgressText.setVisibility(View.INVISIBLE);
+
+            // Set the TeamName textView
+            RosterActivity.mTeamName.setText(teamName);
         }
 
-        // Hide the loading text and the progressBar
-        RosterActivity.mProgressBar.setVisibility(View.INVISIBLE);
-        RosterActivity.mProgressText.setVisibility(View.INVISIBLE);
-
-        // Set the TeamName textView
-        RosterActivity.mTeamName.setText(teamName);
         // Save the TeamName into the SharedPreference file
         MainActivity.mSharedPrefs.edit().putString("teamName", teamName).apply();
     }
