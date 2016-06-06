@@ -158,7 +158,7 @@ public class SelectionActivity extends AppCompatActivity {
                     JSONObject jsonResponse = new JSONObject(data.getStringExtra("jsonResponseString"));
                     parseJSONResponse(jsonResponse);
                     // Send a toast to the user notifying their selections were updated
-                    Toast.makeText(getApplicationContext(), R.string.editSelectionsSuccess, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.editSelectionsSuccess, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

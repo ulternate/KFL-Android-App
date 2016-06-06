@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,7 +28,21 @@ import java.util.HashMap;
 /**
  * Created by Daniel Swain (ulternate) 05/06/2016
  *
- * Activity to allow users to edit their team selections using the WebService api /api/selected_team using POST
+ * Activity to allow users to edit their team selections using the WebService api /api/selected_team using PUT method
+ *
+ * Methods:
+ *  onCreate: Create and initiate the activity layout and views
+ *  buildPostDataFromSelections(): Build a HashMap of string key/value pairs containing the selection data to be sent
+ *      to the server.
+ *  doesSpinnerHaveSelection(Spinner spinner): Check to see if the provided spinner has a valid selection.
+ *  getPositionOfPlayerObject(ArrayList<PlayerObject> objs, PlayerObject obj): Get the position of the playerObject
+ *      in the ArrayList of PlayerObjects so the spinner can get it's selection set to that to show the current
+ *      selection when the activity is launched.
+ *
+ * Inner Classes:
+ *  SelectionEditAsyncTask: Send the selections to the WebService via the PUT method to update the user's selections
+ *      in the Site database (also reflects those changes in the application database)
+ *
  */
 public class SelectionEditActivity extends AppCompatActivity {
 
@@ -48,12 +63,12 @@ public class SelectionEditActivity extends AppCompatActivity {
 
         // Loop through and grab all the spinners
         for(int i = 1; i < 15; i++){
-            // Get the spinner's id
+            // Get the spinner id
             int spinnerId = getResources().getIdentifier("editSelectionPlayer" + String.valueOf(i), "id", getPackageName());
             // Get the spinner
             Spinner spinner = (Spinner) findViewById(spinnerId);
             assert spinner != null;
-            // Use a simple arrayAdapter for the spinner
+            // Use a simple arrayAdapter for the spinner with the playerObjects from the User
             ArrayAdapter<PlayerObject> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, playerObjects);
             // Assign the adapter to the spinner
             spinner.setAdapter(adapter);
@@ -61,21 +76,29 @@ public class SelectionEditActivity extends AppCompatActivity {
             SelectionObject selectionObject = mDbHelper.getSelectionAtPosition(i);
             // If there is a selectionObject then set the spinner selection to it
             if (selectionObject != null){
-                Log.d("i", String.valueOf(i));
                 spinner.setSelection(getPositionOfPlayerObject(playerObjects, selectionObject.getPlayerObject()));
             } else {
                 spinner.setSelection(-1);
             }
         }
 
-        // Connect with the submit button and add an onClickListener
-        Button submit = (Button) findViewById(R.id.editSelectionSubmit);
+        // Connect with the Loading/Submit progress bar and submit button
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.editSelectionLoadingBar);
+        final Button submit = (Button) findViewById(R.id.editSelectionSubmit);
         assert submit != null;
+        assert progressBar != null;
+
+        // Show the button and hide the progress bar
+        submit.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        // Set the onClickListener for the Submit button
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean valid = true;
                 for(int i = 1; i < 15; i++) {
+                    // Get the spinner and check if it has a valid selection
                     int spinnerId = getResources().getIdentifier("editSelectionPlayer" + String.valueOf(i), "id", getPackageName());
                     Spinner spinner = (Spinner) findViewById(spinnerId);
                     if(!doesSpinnerHaveSelection(spinner)) {
@@ -90,9 +113,14 @@ public class SelectionEditActivity extends AppCompatActivity {
                 if (valid){
                     // Get the SelectionId from the SharedPreferences and send the selections to the WebService
                     if(MainActivity.mSharedPrefs.getInt("selectionId", 0) != 0 && !MainActivity.mSharedPrefs.getString("token", "").equals("")) {
-                        String apiUrl = MainActivity.SELECTION_URL + String.valueOf(MainActivity.mSharedPrefs.getInt("selectionId", 0)) + "/";
+                        // Get the apiToken and selectionId
                         String apiToken = MainActivity.mSharedPrefs.getString("token", "");
                         int selectionId = MainActivity.mSharedPrefs.getInt("selectionId", 0);
+                        // Build the apiURL (needs the selectionId appended)
+                        String apiUrl = MainActivity.SELECTION_URL + String.valueOf(selectionId) + "/";
+                        // Set the Loading/Submit progress spinner to be visible and hide the button
+                        progressBar.setVisibility(View.VISIBLE);
+                        submit.setVisibility(View.INVISIBLE);
                         // Execute the API call in the background
                         new SelectionEditAsyncTask().execute(apiUrl, apiToken, String.valueOf(selectionId));
                     } else {
@@ -112,6 +140,10 @@ public class SelectionEditActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Build the postData HashMap from the User's selections, this is sent to the WebService API
+     * @return a hashMap properly configured for the WebService API
+     */
     private HashMap<String, String> buildPostDataFromSelections(){
         postData = new HashMap<>();
         for(int i = 1; i < 15; i++){
@@ -169,29 +201,52 @@ public class SelectionEditActivity extends AppCompatActivity {
         return postData;
     }
 
+    /**
+     * Check if the provided spinner object has a selection
+     * @param spinner the spinner object
+     * @return true or false depending on if a selection exists or not
+     */
     private boolean doesSpinnerHaveSelection(Spinner spinner){
-        boolean ans = false;
-        if (spinner != null && spinner.getSelectedItem() != null){
-            ans = true;
-        }
-        return ans;
+        // Return true if a selection exists else return false
+        return spinner != null && spinner.getSelectedItem() != null;
     }
 
+    /**
+     * Get the position of the playerObject in the ArrayList by comparing the name and afl team as the PlayerObjects
+     * in the spinner and playerObjects in the ArrayList aren't the same, even if they have the same values/properties
+     * so playerObjects.indexOf(PlayerObject playerObject) returns -1.
+     * @param playerObjects the ArrayList of playerObjects
+     * @param playerObject the playerObject being found
+     * @return the index of the provided playerObject in playerObjects
+     */
     private int getPositionOfPlayerObject(ArrayList<PlayerObject> playerObjects, PlayerObject playerObject){
+        // Set returnInt = -1 initially in case the PlayerObject isn't found
         int returnInt = -1;
         for(int i = 0; i < playerObjects.size(); i++){
+            // Find the matching PlayerObject by comparing the playerName and aflTeam
             String playerName = playerObjects.get(i).getName();
             String aflTeam = playerObjects.get(i).getTeam();
             if (playerName.equals(playerObject.getName()) && aflTeam.equals(playerObject.getTeam())){
                 returnInt = i;
+                // Break out early on the first match
                 break;
             }
         }
+        // Return the position as either -1 (not found) or the position in the ArrayList
         return returnInt;
     }
 
+    /**
+     * Send the changes to the User's selections to the WebService asynchronously.
+     */
     private class SelectionEditAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
+        /**
+         * Send the changes to the User's selections to the WebService using the JSONParser.makeHttpRequest
+         * method and the provided params (built using buildPostDataFromSelections())
+         * @param args the string arguments for the task, in this case [url, apiToken]
+         * @return a JSONArray containing the WebService's response
+         */
         @Override
         protected JSONArray doInBackground(String... args) {
             try {
@@ -206,7 +261,6 @@ public class SelectionEditActivity extends AppCompatActivity {
                     params.putAll(buildPostDataFromSelections());
                     // Get the JSONArray using JSONParser class's HTTPRequest method (PUT method)
                     JSONArray json = JSONParser.makeHttpRequest(args[0], "PUT", params);
-
                     // If we get a returned json then the HTTPRequest was successful so lets return it
                     if (json != null) {
                         return json;
@@ -219,11 +273,15 @@ public class SelectionEditActivity extends AppCompatActivity {
                 // There was an exception of some kind, report this (this would be sent in any bug reports)
                 e.printStackTrace();
             }
-
             // If we've got to here then we didn't get a successful response so we return null
             return null;
         }
 
+        /**
+         * Send the updated selections from the JSONArray from the WebService to the SelectionActivity
+         * for parsing and updating in the Application View and Database
+         * @param jsonArray the response from the server
+         */
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             try {

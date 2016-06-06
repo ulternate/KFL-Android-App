@@ -350,6 +350,20 @@
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 android:layout_marginBottom="@dimen/layout_vertical_margin"
                 />
+
+            <!--Progress Loading bar, shows when user's selection edit AsyncTask is
+                being completed, then is hidden-->
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:id="@+id/editSelectionLoadingBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                android:layout_below="@id/editSelectionPosition14"
+                android:layout_marginTop="@dimen/layout_vertical_margin"
+                />
+
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
