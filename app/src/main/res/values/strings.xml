@@ -45,8 +45,9 @@
     <string name="forwardPosition">Forward</string>
     <string name="midPosition">Midfielder</string>
     <string name="flexPosition">Flex</string>
-    <string name="noAPI">No user api token detected. You need to login to access this activity</string>
+    <string name="noAPI">There was an error with your user details. You need to login again to access this activity</string>
     <string name="selectionEditActivityName">Edit Selections</string>
     <string name="editSelectionsInstructions">Update your starting positions below</string>
     <string name="selectionNoneWarn">You must select a player for all positions</string>
+    <string name="editSelectionsSuccess">Your selections have been saved. Returning to your team list.</string>
 </resources>

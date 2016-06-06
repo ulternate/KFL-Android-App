@@ -49,23 +49,9 @@ public class JSONParser {
      * @return a JSONArray from the WebService API call response
      */
     public static JSONArray makeHttpRequest(String url, String method, HashMap<String, String> params) {
-        // String builder object to build the PostData from the provided params HashMap
+        // String builder object to store the built PostData from the provided params HashMap
         sbParams = new StringBuilder();
-        int i = 0;
-        // For each key/value pair in the HashMap append it to the StringBuilder to build the PostData
-        for (String key : params.keySet()) {
-            try {
-                if (i != 0) {
-                    // Add & if it's the first key/value pair
-                    sbParams.append("&");
-                }
-                // URL encode the params value in the desired character set (UTF-8) and append it to the PostData
-                sbParams.append(key).append("=").append(URLEncoder.encode(params.get(key), charset));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            i++;
-        }
+        String apiToken = "";
 
         // Switch statement to perform the HttpUrlConnection based upon the provided method string
         switch (method) {
@@ -83,6 +69,7 @@ public class JSONParser {
                     conn.setConnectTimeout(15000);
                     conn.connect();
                     // Get the PostData from our params and add them to the dataOutputStream
+                    sbParams = buildPostData(params);
                     paramsString = sbParams.toString();
                     wr = new DataOutputStream(conn.getOutputStream());
                     wr.writeBytes(paramsString);
@@ -94,6 +81,7 @@ public class JSONParser {
                 break;
             case "GET":
                 // request method is GET and doesn't require the API token (but can use other postData)
+                sbParams = buildPostData(params);
                 if (sbParams.length() != 0) {
                     // Build the url to include the postData params
                     url += "?" + sbParams.toString();
@@ -114,11 +102,11 @@ public class JSONParser {
                 break;
             case "GET AUTH":
                 // Request method is GET, but it needs to use the API token as its an authenticated endpoint
-                String apiToken = "";
                 // Grab the apiToken from the postData params as it needs to go into the connection header
+                sbParams = buildPostData(params);
                 if (sbParams.length() != 0) {
-                    // sbParams is formatted as "token =APITokenValue". Need to split via " =" and grab just the token value
-                    apiToken = sbParams.toString().split(" =")[1];
+                    // sbParams is formatted as "token=APITokenValue". Need to split via "=" and grab just the token value
+                    apiToken = sbParams.toString().split("=")[1];
                 }
                 try {
                     urlObj = new URL(url);
@@ -130,6 +118,38 @@ public class JSONParser {
                     conn.setRequestProperty("Accept-Charset", charset);
                     conn.setConnectTimeout(15000);
                     conn.connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "PUT":
+                // Request method is PUT, this requires the API token as it's an authenticated endpoint
+                // Grab the apiToken from the postData params as it is needed for the connection header
+                apiToken = params.get("token");
+                // Remove the token from the hashMap so it isn't sent in the PostData
+                params.remove("token");
+                // Get the postData containing the information being posted to the WebService as a JSON
+                JSONObject jsonParams = buildSelectionsJSONPostData(params);
+                // Build the connection using the postData and apiToken
+                try {
+                    urlObj = new URL(url);
+                    // Build the HttpURLConnection object with the POST method and API Token
+                    conn = (HttpURLConnection) urlObj.openConnection();
+                    conn.setDoOutput(true);
+                    conn.setRequestMethod("PUT");
+                    conn.setRequestProperty("Authorization", "Token " + apiToken);
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("Accept-Charset", charset);
+                    conn.setRequestProperty("Accept", "application/json");
+                    conn.setReadTimeout(10000);
+                    conn.setConnectTimeout(15000);
+                    conn.connect();
+                    // Get the PostData from params and add them to the dataOutputStream
+                    paramsString = jsonParams.toString();
+                    wr = new DataOutputStream(conn.getOutputStream());
+                    wr.writeBytes(paramsString);
+                    wr.flush();
+                    wr.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -177,5 +197,44 @@ public class JSONParser {
 
         // Return the JSONArray from the WebService (or null)
         return jsonArray;
+    }
+
+    private static StringBuilder buildPostData(HashMap<String, String> params){
+        StringBuilder stringBuilder = new StringBuilder();
+        int i = 0;
+        // For each key/value pair in the HashMap append it to the StringBuilder to build the PostData
+        for (String key : params.keySet()) {
+            try {
+                if (i != 0) {
+                    // Add & if it's not the first key/value pair
+                    stringBuilder.append("&");
+                }
+                // URL encode the params value in the desired character set (UTF-8) and append it to the PostData
+                stringBuilder.append(key).append("=").append(URLEncoder.encode(params.get(key), charset));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            i++;
+        }
+        return stringBuilder;
+    }
+
+    private static JSONObject buildSelectionsJSONPostData(HashMap<String, String> params){
+        JSONObject jsonObject = new JSONObject();
+        for(int i = 1; i < 15; i++){
+            try {
+                JSONObject player = new JSONObject();
+                String jsonPlayerKey = "player" + String.valueOf(i);
+                player.put("player_name", params.get(jsonPlayerKey + ".player_name"));
+                player.put("player_team", params.get(jsonPlayerKey + ".player_team"));
+                // Put the player into the returning object
+                jsonObject.put(jsonPlayerKey, player);
+                // Put the position into the returning object
+                jsonObject.put("position" + String.valueOf(i), params.get("position" + String.valueOf(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
     }
 }

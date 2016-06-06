@@ -117,7 +117,7 @@ public class RosterActivity extends AppCompatActivity {
                 HashMap<String, String> params = new HashMap<>();
                 // Make sure we only do this if we have enough arguments
                 if (args.length > 1) {
-                    params.put("token ", args[1]);
+                    params.put("token", args[1]);
 
                     // Get the JSONArray using our JSONParser class's HTTPRequest method (POST method)
                     JSONArray json = JSONParser.makeHttpRequest(args[0], "GET AUTH", params);
