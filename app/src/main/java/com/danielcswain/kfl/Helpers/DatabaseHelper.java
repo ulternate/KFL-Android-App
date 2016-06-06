@@ -213,14 +213,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (!doesArticleExist(articleObject)){
             // Create the ContentValues object which will hold the new database values for the ArticleObject
             ContentValues values = new ContentValues();
-            values.put(COLUMN_NAME_ARTICLE_AUTHOR, articleObject.author);
-            values.put(COLUMN_NAME_ARTICLE_CATEGORY, articleObject.category);
-            values.put(COLUMN_NAME_ARTICLE_IMAGE_URL, articleObject.imageURL);
-            values.put(COLUMN_NAME_ARTICLE_LONG_TEXT, articleObject.longText);
-            values.put(COLUMN_NAME_ARTICLE_PUB_DATE, articleObject.postDate);
-            values.put(COLUMN_NAME_ARTICLE_SUMMARY, articleObject.summary);
-            values.put(COLUMN_NAME_ARTICLE_THUMBNAIL_URL, articleObject.thumbnailURL);
-            values.put(COLUMN_NAME_ARTICLE_TITLE, articleObject.title);
+            values.put(COLUMN_NAME_ARTICLE_AUTHOR, articleObject.getAuthor());
+            values.put(COLUMN_NAME_ARTICLE_CATEGORY, articleObject.getCategory());
+            values.put(COLUMN_NAME_ARTICLE_IMAGE_URL, articleObject.getImageURL());
+            values.put(COLUMN_NAME_ARTICLE_LONG_TEXT, articleObject.getLongText());
+            values.put(COLUMN_NAME_ARTICLE_PUB_DATE, articleObject.getPostDate());
+            values.put(COLUMN_NAME_ARTICLE_SUMMARY, articleObject.getSummary());
+            values.put(COLUMN_NAME_ARTICLE_THUMBNAIL_URL, articleObject.getThumbnailURL());
+            values.put(COLUMN_NAME_ARTICLE_TITLE, articleObject.getTitle());
             // Insert the ArticleObject into the database
             db.insert(TABLE_NAME_ARTICLES, null, values);
             // Close the connection to the database to avoid memory leaks
@@ -253,10 +253,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME_ARTICLE_TITLE + "=?";
         // The values for the selection statement, i.e. the ArticleObject properties we are using for the search.
         String[] arguments = {
-                articleObject.author,
-                articleObject.category,
-                articleObject.postDate,
-                articleObject.title
+                articleObject.getAuthor(),
+                articleObject.getCategory(),
+                articleObject.getPostDate(),
+                articleObject.getTitle()
         };
         // Perform the query and return any database rows that match.
         Cursor cursor = db.query(TABLE_NAME_ARTICLES, columns, selection, arguments, null, null, null);

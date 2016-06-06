@@ -18,14 +18,14 @@ import org.json.JSONObject;
 public class ArticleObject {
 
     /* Object constants */
-    public String thumbnailURL;
-    public String imageURL;
-    public String category;
-    public String summary;
-    public String longText;
-    public String title;
-    public String author;
-    public String postDate;
+    private String thumbnailURL;
+    private String imageURL;
+    private String category;
+    private String summary;
+    private String longText;
+    private String title;
+    private String author;
+    private String postDate;
 
     /**
      * ArticleObject constructor class given the listed parameters

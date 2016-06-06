@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(mContext, ArticleActivity.class);
                     // Add the article string extras to the intent for showing the article content
                     ArticleObject articleObject = (ArticleObject) mListView.getItemAtPosition(position);
-                    intent.putExtra("title", articleObject.title);
-                    intent.putExtra("author", articleObject.author);
-                    intent.putExtra("imageURL", articleObject.imageURL);
-                    intent.putExtra("pubDate", articleObject.postDate);
-                    intent.putExtra("longText", articleObject.longText);
+                    intent.putExtra("title", articleObject.getTitle());
+                    intent.putExtra("author", articleObject.getAuthor());
+                    intent.putExtra("imageURL", articleObject.getImageURL());
+                    intent.putExtra("pubDate", articleObject.getPostDate());
+                    intent.putExtra("longText", articleObject.getLongText());
                     startActivity(intent);
                 }
             });

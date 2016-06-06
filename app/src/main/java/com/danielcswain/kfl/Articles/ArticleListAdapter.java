@@ -66,27 +66,27 @@ public class ArticleListAdapter extends ArrayAdapter<ArticleObject>{
         ImageView ivThumbnail = (ImageView) convertView.findViewById(R.id.articleThumbnail);
 
         // Populate the data into the template view using the data object
-        tvTitle.setText(articleObject.title);
-        tvAuthor.setText(articleObject.author);
+        tvTitle.setText(articleObject.getTitle());
+        tvAuthor.setText(articleObject.getAuthor());
         // Show the postDate in a nicer format using SimpleDateFormat to parse ArticleObject.postDate
         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
         // Try and parse the postDate and convert it into the output format.
         try {
-            Date oneWayTripDate = input.parse(articleObject.postDate);
+            Date oneWayTripDate = input.parse(articleObject.getPostDate());
             // If successful in parsing the Date, then set the textView to the nicer format)
             tvDate.setText(output.format(oneWayTripDate));
         } catch (ParseException e) {
             e.printStackTrace();
             // The parsing of the date was unsuccessful so just use the default database value (that's not formatted)
-            tvDate.setText(articleObject.postDate);
+            tvDate.setText(articleObject.getPostDate());
         }
 
         // Some of the summary text contains html objects like mailTo links, so using Html.fromHtml for the summary
-        tvSummary.setText(Html.fromHtml(articleObject.summary));
+        tvSummary.setText(Html.fromHtml(articleObject.getSummary()));
 
         // Load the appropriate image resource depending on the articleObject category
-        switch (articleObject.category){
+        switch (articleObject.getCategory()){
             case "A":
                 // Category: Article
                 ivThumbnail.setImageDrawable(MainActivity.mContext.getResources().getDrawable(R.drawable.article));
