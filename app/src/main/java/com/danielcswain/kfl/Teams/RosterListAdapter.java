@@ -63,6 +63,7 @@ public class RosterListAdapter extends ArrayAdapter<PlayerObject> {
                 break;
             case "BL":
             case "Brisbane Lions":
+            case "Brisbane":
                 ivPlayerTeamImage.setImageDrawable(MainActivity.mContext.getResources().getDrawable(R.drawable.afl_bris));
                 break;
             case "CRL":

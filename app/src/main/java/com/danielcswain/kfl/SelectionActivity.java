@@ -37,19 +37,22 @@ import java.util.HashMap;
  *  onCreate: Create and initiate the activity layout, as well as connecting to the ListView and SelectionListAdapter
  *  onCreateOptionsMenu: Initiate the options menu in the actionBar/toolbar
  *  onOptionsItemSelected: Handle option menu item click events
+ *  onActivityResult: Handle finished activity results (in this instance, updating the user's selections was successful)
+ *  parseJSONResponse(JSONObject jO): Used in onActivityResult to update the view and database with the new selections from the user.
  *
  * Inner Classes:
  *  SelectionAsyncTask: A private class that extends the AsyncTask class and implements the doInBackground
  *      and onPostExecute methods to connect to the WebService using the /api/selected_team endpoint and
- *      parse the JSONArray into valid SelectionObjects and put any new ones into the database TODO update old selection objects.
- *
+ *      parse the JSONArray into valid SelectionObjects and put any new ones into the database
  */
 public class SelectionActivity extends AppCompatActivity {
 
+    // The SelectionListAdapter and view objects
     private SelectionListAdapter mAdapter;
     private ProgressBar mProgressBar;
     private TextView mProgressText;
-    private static final int EDIT_SELECTIONS = 1;
+    // The request code used when starting the SelectionEditActivity for a result
+    private static final int REQUEST_CODE_EDIT_SELECTIONS = 1;
 
     /**
      * Create and initiate the activity layout.
@@ -96,8 +99,12 @@ public class SelectionActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.noAPI, Toast.LENGTH_SHORT).show();
             // Log the user out to make sure
             new LogoutAsyncTask().execute(MainActivity.LOGOUT_URL);
-            // close this activity
-            finish();
+            // Go back to the mainActivity and set the flag to clear all activities from the stack
+            // above it. This is to ensure that any roster/selection activities that the user
+            // can't access are closed now that the user is logged out.
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
@@ -124,17 +131,89 @@ public class SelectionActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         // Handle the item selection, in this case, if it's actionSelectionsEdit then it will allow users to edit
         // their selections (not currently implemented)
         if (id == R.id.actionSelectionsEdit) {
             Intent intent = new Intent(getApplicationContext(), SelectionEditActivity.class);
-            startActivityForResult(intent, EDIT_SELECTIONS);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_SELECTIONS);
             return true;
         }
-
         // Return super.onOptionsItemSelected for any item we haven't explicitly covered above.
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Handle the result of any activity that was started from this activity for a resutl
+     * @param requestCode the request code sent with the original activity start request
+     * @param resultCode the result code set by the activity that was started for a result
+     * @param data the intent data from the activity that we're getting the result from
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_EDIT_SELECTIONS){
+            if (resultCode == RESULT_OK){
+                // The user successfully updated their selections, lets parse the JSONObject and update
+                // the view and the database
+                try{
+                    JSONObject jsonResponse = new JSONObject(data.getStringExtra("jsonResponseString"));
+                    parseJSONResponse(jsonResponse);
+                    // Send a toast to the user notifying their selections were updated
+                    Toast.makeText(getApplicationContext(), R.string.editSelectionsSuccess, Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Similar to the SelectionAsyncTask.onPostExecute, parse the JSONObject into valid PlayerObjects
+     * and SelectionObjects and update the selection ListView, SelectionListAdapter and Database with the
+     * updated/new selections
+     * @param jsonObject the response JSON from the SelectionEditActivity response
+     */
+    public void parseJSONResponse(JSONObject jsonObject){
+        // Get an instance of our DatabaseHelper so we can add the items from the JSONArray to the db
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(MainActivity.mContext);
+        // Blank teamName so we can reference it outside the try/catch block
+        String teamName = "";
+        // Blank int selectionId so we can update these selections later (via the selectionId)
+        int selectionId = 0;
+        // Get the team name from the team JSONObject
+        try {
+            teamName = jsonObject.getString("team");
+            // Get the selectionId from the team JSONObject
+            selectionId = jsonObject.getInt("id");
+            // Create a selection object for each player
+            for (int i = 1; i < 15; i++){
+                JSONObject player = jsonObject.getJSONObject("player" + String.valueOf(i));
+                String position = jsonObject.getString("position" + String.valueOf(i));
+                // Get the playerName and aflTeam from player if player JSONObject has them
+                if (player.has("player_name") && player.has("player_team")){
+                    // Get the playerName and aflTeam from the player response
+                    String playerName = player.getString("player_name");
+                    String aflTeam = player.getString("player_team");
+                    // Create a SelectionObject using the playerName, aflTeam, position and playerNum (from the for loop)
+                    SelectionObject selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), position, i);
+                    // Add or update the selectionObject to the database
+                    mDatabaseHelper.addSelection(selectionObject);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Get the latest selectionObjects from the database and update the SelectionListAdapter to contain
+        // the updated selections (removing the old selections)
+        mAdapter.clear();
+        mAdapter.addAll(mDatabaseHelper.getSelections());
+        mAdapter.notifyDataSetChanged();
+        // Close the connection to the database helper to avoid memory leaks now we're finished with it
+        mDatabaseHelper.close();
+        // Hide the loading progressBar and change the ProgressText from "Loading" to the teamName
+        mProgressBar.setVisibility(View.GONE);
+        mProgressText.setText(teamName);
+        // Save the selectionId in the database
+        MainActivity.mSharedPrefs.edit().putInt("selectionId", selectionId).apply();
     }
 
     /**
@@ -158,10 +237,8 @@ public class SelectionActivity extends AppCompatActivity {
                 // Make sure we only do this if we have enough arguments
                 if (args.length > 1) {
                     params.put("token", args[1]);
-
                     // Get the JSONArray using our JSONParser class's HTTPRequest method (POST method)
                     JSONArray json = JSONParser.makeHttpRequest(args[0], "GET AUTH", params);
-
                     // If we get a returned json then the HTTPRequest was successful so lets return it
                     if (json != null) {
                         return json;
@@ -174,7 +251,6 @@ public class SelectionActivity extends AppCompatActivity {
                 // There was an exception of some kind, report this (this would be sent in any bug reports)
                 e.printStackTrace();
             }
-
             // If we've got to here then we didn't get a successful response so we return null
             return null;
         }
@@ -221,20 +297,16 @@ public class SelectionActivity extends AppCompatActivity {
                 // Print the exception stack trace
                 n.printStackTrace();
             }
-
             // Get the latest selectionObjects from the database and update the SelectionListAdapter to contain
             // the updated selections (removing the old selections)
             mAdapter.clear();
             mAdapter.addAll(mDatabaseHelper.getSelections());
             mAdapter.notifyDataSetChanged();
-
             // Close the connection to the database helper to avoid memory leaks now we're finished with it
             mDatabaseHelper.close();
-
             // Hide the loading progressBar and change the ProgressText from "Loading" to the teamName
             mProgressBar.setVisibility(View.GONE);
             mProgressText.setText(teamName);
-
             // Save the selectionId in the database
             MainActivity.mSharedPrefs.edit().putInt("selectionId", selectionId).apply();
         }

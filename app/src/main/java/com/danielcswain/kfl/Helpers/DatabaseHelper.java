@@ -33,6 +33,7 @@ import java.util.ArrayList;
  *  doesPlayerExist(PlayerObject obj): Check to see if the provided PlayerObject exists in the db already.
  *      Returns boolean (true or false).
  *  getSelections(): Get all the selectedPlayers from the database as an ArrayList<SelectionObject>().
+ *  getSelectionAtPosition(int position): Get the SelectionObject in the provided position (1 - 14).
  *  addSelection(SelectionObject obj): Add a single SelectionObject to the database.
  *      This calls doesSelectionExist(SelectionObject obj) internally to only ensure a unique SelectionObject is added.
  *  doesSelectionExist(SelectionObject obj): Check to see if the provided SelectionObject exists in the db already.
@@ -408,6 +409,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return selectionObjects;
     }
 
+    /**
+     * Get the selectionObject at the specified position (i.e. Ruck = position 1, Tackler = 2 or 3...)
+     * @param position the number referring to the COLUMN_NAME_PLAYER_NUM value for the desired SelectionObject
+     * @return a selectionObject, or null if none exist
+     */
     public SelectionObject getSelectionAtPosition(int position){
         // SelectionObject to be returned
         SelectionObject selectionObject = null;

@@ -49,5 +49,5 @@
     <string name="selectionEditActivityName">Edit Selections</string>
     <string name="editSelectionsInstructions">Update your starting positions below</string>
     <string name="selectionNoneWarn">You must select a player for all positions</string>
-    <string name="editSelectionsSuccess">Your selections have been saved. Returning to your team list.</string>
+    <string name="editSelectionsSuccess">Your selections have been successfully updated.</string>
 </resources>

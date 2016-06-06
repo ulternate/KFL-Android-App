@@ -229,7 +229,11 @@ public class SelectionEditActivity extends AppCompatActivity {
             try {
                 JSONObject jsonResponse = jsonArray.getJSONObject(0);
                 if (jsonResponse.has("id")){
-                    Toast.makeText(getApplicationContext(), R.string.editSelectionsSuccess, Toast.LENGTH_SHORT).show();
+                    // The update was a success, send the jsonResponse object back to the SelectionActivity
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("jsonResponseString", jsonResponse.toString());
+                    setResult(RESULT_OK, returnIntent);
+                    // Finish this activity
                     finish();
                 }
             } catch (JSONException e) {
