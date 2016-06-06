@@ -157,7 +157,7 @@ public class SelectionActivity extends AppCompatActivity {
                 HashMap<String, String> params = new HashMap<>();
                 // Make sure we only do this if we have enough arguments
                 if (args.length > 1) {
-                    params.put("token ", args[1]);
+                    params.put("token", args[1]);
 
                     // Get the JSONArray using our JSONParser class's HTTPRequest method (POST method)
                     JSONArray json = JSONParser.makeHttpRequest(args[0], "GET AUTH", params);
@@ -204,21 +204,17 @@ public class SelectionActivity extends AppCompatActivity {
                 selectionId = team.getInt("id");
                 // Create a selection object for each player
                 for (int i = 1; i < 15; i++){
-                    String player = team.getString("player" + String.valueOf(i));
+                    JSONObject player = team.getJSONObject("player" + String.valueOf(i));
                     String position = team.getString("position" + String.valueOf(i));
-                    // Get the playerName and aflTeam from player if player != "null"
-                    if (!player.equals("null")){
-                        // Split the player string from "playerName | aflTeam" as it is sent via the webservice
-                        // Need to escape the | special character to split that and the space correctly
-                        String[] playerArray = player.split(" \\| ");
-                        if (playerArray.length == 2) {
-                            String playerName = playerArray[0];
-                            String aflTeam = playerArray[1];
-                            // Create a SelectionObject using the playerName, aflTeam, position and playerNum (from the for loop)
-                            SelectionObject selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), position, i);
-                            // Add or update the selectionObject to the database
-                            mDatabaseHelper.addSelection(selectionObject);
-                        }
+                    // Get the playerName and aflTeam from player if player JSONObject has them
+                    if (player.has("player_name") && player.has("player_team")){
+                        // Get the playerName and aflTeam from the player response
+                        String playerName = player.getString("player_name");
+                        String aflTeam = player.getString("player_team");
+                        // Create a SelectionObject using the playerName, aflTeam, position and playerNum (from the for loop)
+                        SelectionObject selectionObject = new SelectionObject(new PlayerObject(playerName, aflTeam), position, i);
+                        // Add or update the selectionObject to the database
+                        mDatabaseHelper.addSelection(selectionObject);
                     }
                 }
             }catch(NullPointerException | JSONException n){
