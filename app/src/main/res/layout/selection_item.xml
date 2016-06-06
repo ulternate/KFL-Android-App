@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/layout_vertical_margin"
+    android:paddingLeft="@dimen/layout_horizontal_margin"
+    android:paddingRight="@dimen/layout_horizontal_margin"
     android:paddingTop="@dimen/layout_vertical_margin" >
 
     <!--SelectionObject's player name-->
@@ -14,8 +16,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
-        android:textSize="20sp"
+        android:layout_alignTop="@+id/selectionTeamImage"
+        android:layout_marginTop="@dimen/layout_vertical_margin"
+        android:textSize="@dimen/font_medium"
         />
 
     <!--SelectionObject's player position-->
@@ -24,10 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/layout_horizontal_margin"
-        android:layout_below="@id/selectionPlayerName"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:textSize="18sp"
+        android:layout_alignBottom="@+id/selectionTeamImage"
+        android:layout_marginBottom="@dimen/layout_vertical_margin"
+        android:textSize="@dimen/font_regular"
         />
 
     <!--Image representing the SelectionObject's AFL team-->
@@ -36,6 +38,5 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/layout_horizontal_margin"
         android:contentDescription="@string/playerTeamImage"/>
 </RelativeLayout>

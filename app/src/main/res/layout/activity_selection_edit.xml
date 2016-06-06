@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/layout_horizontal_margin"
-    android:paddingRight="@dimen/layout_horizontal_margin"
     tools:context="com.danielcswain.kfl.SelectionEditActivity">
 
     <!--Activity header giving user their instructions for the activity.-->
@@ -17,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/editSelectionsInstructions"
+        android:textSize="@dimen/font_medium"
         />
 
     <!--ScrollView containing all the PlayerObject selection Spinners and the submit button as
@@ -32,7 +31,9 @@
         <RelativeLayout
             android:id="@+id/editSelectionFieldContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/layout_horizontal_margin"
+            android:paddingRight="@dimen/layout_horizontal_margin">
 
             <!-- Position 1 Title -->
             <TextView
@@ -41,7 +42,8 @@
                 android:layout_height="60dp"
                 android:text="@string/ruckPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/font_regular"
+                />
 
             <!-- Player 1 Selector -->
             <Spinner
@@ -60,9 +62,9 @@
                 android:layout_height="60dp"
                 android:text="@string/tacklerPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
                 android:layout_below="@id/editSelectionPosition1"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:textSize="@dimen/font_regular"
                 />
 
             <!-- Player 2 Selector -->
@@ -82,9 +84,9 @@
                 android:layout_height="60dp"
                 android:text="@string/tacklerPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
                 android:layout_below="@id/editSelectionPosition2"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:textSize="@dimen/font_regular"
                 />
 
             <!-- Player 3 Selector -->
@@ -104,9 +106,9 @@
                 android:layout_height="60dp"
                 android:text="@string/markerPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
                 android:layout_below="@id/editSelectionPosition3"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
+                android:textSize="@dimen/font_regular"
                 />
 
             <!-- Player 4 Selector -->
@@ -126,7 +128,7 @@
                 android:layout_height="60dp"
                 android:text="@string/markerPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition4"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -148,7 +150,7 @@
                 android:layout_height="60dp"
                 android:text="@string/forwardPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition5"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -170,7 +172,7 @@
                 android:layout_height="60dp"
                 android:text="@string/forwardPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition6"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -192,7 +194,7 @@
                 android:layout_height="60dp"
                 android:text="@string/forwardPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition7"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -214,7 +216,7 @@
                 android:layout_height="60dp"
                 android:text="@string/forwardPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition8"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -236,7 +238,7 @@
                 android:layout_height="60dp"
                 android:text="@string/midPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition9"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -259,7 +261,7 @@
                 android:layout_height="60dp"
                 android:text="@string/midPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition10"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -281,7 +283,7 @@
                 android:layout_height="60dp"
                 android:text="@string/midPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition11"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -303,7 +305,7 @@
                 android:layout_height="60dp"
                 android:text="@string/midPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition12"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -325,7 +327,7 @@
                 android:layout_height="60dp"
                 android:text="@string/flexPosition"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="@dimen/font_regular"
                 android:layout_below="@id/editSelectionPosition13"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 />
@@ -349,7 +351,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/editSelectionPosition14"
                 android:layout_marginTop="@dimen/layout_vertical_margin"
-                android:layout_marginBottom="@dimen/layout_vertical_margin"
+                android:layout_marginBottom="@dimen/layout_vertical_large_margin"
                 />
 
             <!--Progress Loading bar, shows when user's selection edit AsyncTask is

@@ -28,7 +28,7 @@
         android:layout_below="@id/selectionLoadingBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:textSize="24sp"
+        android:textSize="@dimen/font_header"
         />
 
     <!--ListView containing the user's selections-->
