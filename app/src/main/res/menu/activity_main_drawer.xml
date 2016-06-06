@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:checkableBehavior="single">
+        <!--Refresh the articles manually-->
         <item
             android:id="@+id/navArticles"
             android:title="@string/refreshArticles" />
 
+        <!--Log user in, only visible when not logged in-->
         <item
             android:id="@+id/navLogin"
             android:title="@string/navLogin" />
 
+        <!--Log user out, only visible when logged in-->
         <item
             android:id="@+id/navLogout"
             android:title="@string/navLogout"
             android:visible="false" />
 
+        <!--Take user to RosterActivity, only visible when logged in-->
         <item
             android:id="@+id/navMyTeam"
             android:title="@string/navMyTeam" />
 
+        <!--Take user to SelectionActivity, only visible when logged in-->
         <item
             android:id="@+id/navSelectTeam"
             android:title="@string/navSelectTeam" />
-
     </group>
-
 </menu>
