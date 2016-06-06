@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danielcswain.kfl.AsyncHandlers.LogoutAsyncTask;
+import com.danielcswain.kfl.AsyncHandlers.RosterAsyncTask;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Helpers.JSONParser;
 import com.danielcswain.kfl.Teams.PlayerObject;
@@ -93,6 +94,8 @@ public class SelectionActivity extends AppCompatActivity {
             // Set the ProgressText to Loading (This will get updated to the teamName after the API call completes
             mProgressText.setText(R.string.loading);
             // Get the latest roster from the WebService, only if there exists a token for the User
+            new RosterAsyncTask().execute(MainActivity.TEAM_URL, apiToken);
+            // Get the latest selections from the WebService, only if there exists a token for the User
             new SelectionAsyncTask().execute(MainActivity.SELECTION_URL, apiToken);
         } else {
             // Send a toast message to the user and finish the activity as they don't have an API key
