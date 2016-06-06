@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,8 +41,6 @@ import java.util.ArrayList;
  *  setNavMenuItemVisibility(boolean loggedIn): Show the navMenuItems based on the user's logged in status.
  *  getLatestArticlesFromWebService(String url): Get the latest articles from the WebService Asynchronously.
  *  onBackPressed(): Handle the back press action to either hide the navMenuDrawer if open, or go back.
- *  onCreateOptionsMenu(Menu menu): Create the optionsMenu for the application.
- *  onOptionsItemSelected(MenuItem item): Handle the selection of optionsMenuItems.
  *  onNavigationItemSelected(MenuItem item): Handle the selection of NavMenuItems.
  *  onActivityResult(int requestCode, int resultCode, Intent data): Used to process the results of the LoginActivity.
  */
@@ -196,37 +193,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-    /**
-     * Create the options menu for the Activity
-     * @param menu the menu to inflate the desired menu layout into
-     * @return true to create the options menu
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    /**
-     * Handle the selection of the options menu items
-     * @param item the options menu item that was selected
-     * @return true to continue through the selection action
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.actionSettings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

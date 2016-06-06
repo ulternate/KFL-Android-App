@@ -46,11 +46,11 @@
             <!-- Player 1 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition1"
                 android:layout_alignTop="@+id/editSelectionPosition1"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 2 Title -->
@@ -68,11 +68,11 @@
             <!-- Player 2 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition2"
                 android:layout_alignTop="@+id/editSelectionPosition2"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 3 Title -->
@@ -90,11 +90,11 @@
             <!-- Player 3 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer3"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition3"
                 android:layout_alignTop="@+id/editSelectionPosition3"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 4 Title -->
@@ -112,11 +112,11 @@
             <!-- Player 4 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer4"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition4"
                 android:layout_alignTop="@+id/editSelectionPosition4"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 5 Title -->
@@ -134,11 +134,11 @@
             <!-- Player 5 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer5"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition5"
                 android:layout_alignTop="@+id/editSelectionPosition5"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 6 Title -->
@@ -156,11 +156,11 @@
             <!-- Player 6 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer6"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition6"
                 android:layout_alignTop="@+id/editSelectionPosition6"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 7 Title -->
@@ -178,11 +178,11 @@
             <!-- Player 7 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer7"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition7"
                 android:layout_alignTop="@+id/editSelectionPosition7"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 8 Title -->
@@ -200,11 +200,11 @@
             <!-- Player 8 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer8"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition8"
                 android:layout_alignTop="@+id/editSelectionPosition8"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 9 Title -->
@@ -222,11 +222,11 @@
             <!-- Player 9 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer9"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition9"
                 android:layout_alignTop="@+id/editSelectionPosition9"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 10 Title -->
@@ -244,11 +244,12 @@
             <!-- Player 10 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer10"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition10"
                 android:layout_alignTop="@+id/editSelectionPosition10"
+                android:layout_toRightOf="@id/editSelectionPosition10"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 />
 
             <!-- Position 11 Title -->
@@ -266,11 +267,11 @@
             <!-- Player 11 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer11"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition11"
                 android:layout_alignTop="@+id/editSelectionPosition11"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 12 Title -->
@@ -288,11 +289,11 @@
             <!-- Player 12 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer12"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition12"
                 android:layout_alignTop="@+id/editSelectionPosition12"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 13 Title -->
@@ -310,11 +311,11 @@
             <!-- Player 13 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer13"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition13"
                 android:layout_alignTop="@+id/editSelectionPosition13"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Position 14 Title -->
@@ -332,11 +333,11 @@
             <!-- Player 14 Selector -->
             <Spinner
                 android:id="@+id/editSelectionPlayer14"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/editSelectionPosition14"
                 android:layout_alignTop="@+id/editSelectionPosition14"
+                android:layout_alignLeft="@+id/editSelectionPlayer10"
                 />
 
             <!-- Final Submit button to send the new Selections to the WebService -->
