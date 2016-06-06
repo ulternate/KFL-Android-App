@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout for a single row of the selection ListView, used by the
+    SelectionListAdapter-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -6,6 +8,7 @@
     android:paddingBottom="@dimen/layout_vertical_margin"
     android:paddingTop="@dimen/layout_vertical_margin" >
 
+    <!--SelectionObject's player name-->
     <TextView
         android:id="@+id/selectionPlayerName"
         android:layout_width="wrap_content"
@@ -15,6 +18,7 @@
         android:textSize="20sp"
         />
 
+    <!--SelectionObject's player position-->
     <TextView
         android:id="@+id/selectionPlayerPosition"
         android:layout_width="wrap_content"
@@ -26,6 +30,7 @@
         android:textSize="18sp"
         />
 
+    <!--Image representing the SelectionObject's AFL team-->
     <ImageView
         android:id="@+id/selectionTeamImage"
         android:layout_width="80dp"
@@ -33,5 +38,4 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/layout_horizontal_margin"
         android:contentDescription="@string/playerTeamImage"/>
-
 </RelativeLayout>

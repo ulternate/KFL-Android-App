@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Represents a single row of the Article ListView, used by
+    the ArticleListAdapter-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -6,11 +8,13 @@
     android:paddingBottom="@dimen/layout_vertical_margin"
     android:paddingTop="@dimen/layout_vertical_margin" >
 
+    <!--Article Thumbnail icon-->
     <ImageView
         android:id="@+id/articleThumbnail"
         android:layout_width="60dp"
         android:layout_height="wrap_content" />
 
+    <!--Article Title-->
     <TextView
         android:id="@+id/articleTitle"
         android:layout_width="wrap_content"
@@ -21,6 +25,7 @@
         android:textStyle="bold"
         />
 
+    <!--Article's author-->
     <TextView
         android:id="@+id/articleAuthor"
         android:layout_width="wrap_content"
@@ -31,6 +36,7 @@
         android:layout_marginLeft="@dimen/layout_horizontal_margin"
         />
 
+    <!--Published date of the article-->
     <TextView
         android:id="@+id/articlePubDate"
         android:layout_width="wrap_content"
@@ -41,6 +47,7 @@
         android:layout_alignParentRight="true"
         />
 
+    <!--Short text, or article summary-->
     <TextView
         android:id="@+id/articleSummary"
         android:layout_width="wrap_content"
@@ -50,5 +57,4 @@
         android:layout_toRightOf="@id/articleThumbnail"
         android:layout_marginLeft="@dimen/layout_horizontal_margin"
         />
-
 </RelativeLayout>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Activity Layout resource for the SelectionActivity-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.danielcswain.kfl.SelectionActivity">
 
+    <!--Loading Progress Bar, shown when getting user's selections-->
     <android.support.v4.widget.ContentLoadingProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:id="@+id/selectionLoadingBar"
@@ -15,6 +17,9 @@
         android:layout_centerHorizontal="true"
         android:visibility="visible" />
 
+    <!--Loading text, shown when getting user's selections
+        Then it is changed to the user's team name once selections
+        have been downloaded-->
     <TextView
         android:id="@+id/selectionLoadingText"
         android:layout_width="wrap_content"
@@ -26,6 +31,7 @@
         android:textSize="24sp"
         />
 
+    <!--ListView containing the user's selections-->
     <ListView
         android:id="@+id/selectionListView"
         android:layout_width="match_parent"
@@ -33,5 +39,4 @@
         android:layout_below="@id/selectionLoadingText"
         android:layout_marginTop="@dimen/layout_vertical_margin"
         />
-
 </RelativeLayout>

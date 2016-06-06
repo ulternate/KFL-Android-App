@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource for the RosterActivity-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +8,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.danielcswain.kfl.RosterActivity">
 
+    <!--Progress Loading bar, shows when user's roster AsyncTask is
+        being completed, then is hidden-->
     <android.support.v4.widget.ContentLoadingProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:id="@+id/rosterLoadingBar"
@@ -15,6 +18,8 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
 
+    <!--Progress loading text, shows when the user's roster AsyncTask
+        is being completed, then is hidden-->
     <TextView
         android:id="@+id/rosterLoadingText"
         android:layout_width="wrap_content"
@@ -27,6 +32,7 @@
         android:visibility="invisible"
         />
 
+    <!--Team name-->
     <TextView
         android:id="@+id/rosterTeamName"
         android:layout_width="wrap_content"
@@ -35,6 +41,8 @@
         android:textSize="24sp"
         />
 
+    <!--Roster ListView, contains the user's roster when downloaded
+        from the WebService-->
     <ListView
         android:id="@+id/rosterListView"
         android:layout_width="match_parent"
@@ -42,5 +50,4 @@
         android:layout_below="@id/rosterTeamName"
         android:layout_marginTop="@dimen/layout_vertical_margin"
         />
-
 </RelativeLayout>

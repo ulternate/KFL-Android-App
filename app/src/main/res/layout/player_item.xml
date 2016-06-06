@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout representing a single row for the Roster ListView
+    Contains the playerObject information in the RosterListAdapter-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -6,6 +8,7 @@
     android:paddingBottom="@dimen/layout_vertical_margin"
     android:paddingTop="@dimen/layout_vertical_margin" >
 
+    <!--Player name-->
     <TextView
         android:id="@+id/playerName"
         android:layout_width="wrap_content"
@@ -16,6 +19,7 @@
         android:textSize="20sp"
         />
 
+    <!--Player's AFL team image-->
     <ImageView
         android:id="@+id/playerTeamImage"
         android:layout_width="80dp"
@@ -24,5 +28,4 @@
         android:layout_marginRight="@dimen/layout_horizontal_margin"
         android:contentDescription="@string/playerTeamImage"
         />
-
 </RelativeLayout>

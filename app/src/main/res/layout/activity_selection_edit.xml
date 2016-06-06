@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Activity resource for the SelectionEditActivity-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,14 +10,17 @@
     android:paddingRight="@dimen/layout_horizontal_margin"
     tools:context="com.danielcswain.kfl.SelectionEditActivity">
 
+    <!--Activity header giving user their instructions for the activity.-->
     <TextView
         android:id="@+id/editSelectionTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:text="@string/editSelectionsInstructions"
         />
 
+    <!--ScrollView containing all the PlayerObject selection Spinners and the submit button as
+        these elements will likely go off screen (vertically)-->
     <ScrollView
         android:id="@+id/editSelectionScrollView"
         android:layout_width="match_parent"
@@ -24,6 +28,7 @@
         android:layout_below="@id/editSelectionTitle"
         android:layout_marginTop="@dimen/layout_vertical_margin">
 
+        <!--RelativeLayout taking the width of the scrollView and the height of the children elements-->
         <RelativeLayout
             android:id="@+id/editSelectionFieldContainer"
             android:layout_width="match_parent"
@@ -334,6 +339,7 @@
                 android:layout_alignTop="@+id/editSelectionPosition14"
                 />
 
+            <!-- Final Submit button to send the new Selections to the WebService -->
             <Button
                 android:id="@+id/editSelectionSubmit"
                 android:layout_width="wrap_content"
@@ -344,7 +350,6 @@
                 android:layout_marginTop="@dimen/layout_vertical_margin"
                 android:layout_marginBottom="@dimen/layout_vertical_margin"
                 />
-
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
