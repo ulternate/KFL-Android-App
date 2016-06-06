@@ -373,10 +373,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<SelectionObject> selectionObjects = new ArrayList<>();
         // Get a read only connection to the database.
         SQLiteDatabase db = this.getReadableDatabase();
-        // The database query
-        String query = "SELECT * FROM " + TABLE_NAME_SELECTED_TEAM;
-        // Get the rows from the database that match the SQL query
-        Cursor cursor = db.rawQuery(query, null);
+        // The columns to return data from
+        String[] columns = {
+                COLUMN_NAME_PLAYER_NAME,
+                COLUMN_NAME_PLAYER_AFL_TEAM,
+                COLUMN_NAME_PLAYER_POSITION,
+                COLUMN_NAME_PLAYER_NUM
+        };
+        // The selection criteria and arguments aren't required as all rows are required to be returned
+        String orderString = COLUMN_NAME_PLAYER_NUM + " ASC";
+        // Get all rows from the database ordered in ascending order via COLUMN_NAME_PLAYER_NUM
+        Cursor cursor = db.query(TABLE_NAME_SELECTED_TEAM, columns, null, null, null, null, orderString);
         // If we have a result(s) then populate the ArrayList
         if (cursor != null){
             if (cursor.moveToFirst()){
