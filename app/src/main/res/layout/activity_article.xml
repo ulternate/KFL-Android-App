@@ -28,23 +28,12 @@
             android:textStyle="bold"
             />
 
-        <!--Article Main image, this is loaded asynchronously from the ArticleObject using the
-            DownloadImageTask-->
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_below="@id/title"
-            android:layout_marginTop="@dimen/layout_vertical_margin"
-            android:layout_centerHorizontal="true"
-            />
-
         <!--Author of the article-->
         <TextView
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image"
+            android:layout_below="@+id/title"
             android:layout_marginTop="@dimen/layout_vertical_margin"
             android:layout_alignParentLeft="true"
             />
@@ -54,7 +43,7 @@
             android:id="@+id/pubDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image"
+            android:layout_below="@+id/title"
             android:layout_marginTop="@dimen/layout_vertical_margin"
             android:layout_alignParentRight="true"
             />

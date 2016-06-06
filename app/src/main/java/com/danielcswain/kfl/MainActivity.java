@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         // Populate the ListView
-        ArrayList<ArticleObject> articleObjects = new ArrayList<>();
+        final ArrayList<ArticleObject> articleObjects = new ArrayList<>();
         // Connect our articleObjects array to the ListView adapter
         mAdapter = new ArticleListAdapter(this, articleObjects);
         // Attach the adapter to the ListView
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     intent.putExtra("imageURL", articleObject.getImageURL());
                     intent.putExtra("pubDate", articleObject.getPostDate());
                     intent.putExtra("longText", articleObject.getLongText());
+                    intent.putExtra("category", articleObject.getCategory());
                     startActivity(intent);
                 }
             });

@@ -1,14 +1,16 @@
 package com.danielcswain.kfl;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.danielcswain.kfl.AsyncHandlers.DownloadImageTask;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,14 +22,14 @@ import java.util.Date;
  *
  * Methods:
  *  onCreate: set the layout and fill the textViews and ImageViews
- *
- * Uses the following classes:
- *  DownloadImageTask: This asynchronous image loading class is used to perform the image download in the background
- *      for the Article header image. This is because the article image data is just a url and the image is not
- *      saved in the application data. Image loading via a url cannot be done on the Main UI thread.
+ *  onCreateOptionsMenu: build the options menu
+ *  onOptionsItemSelected: handle the optionsMenuItem click
+ *  buildArticleLink(String category, string title): Build the article link for this article
  */
 public class ArticleActivity extends AppCompatActivity {
 
+    private final String BASE_URL = "http://www.kfl.com.au/";
+    private static String linkUrl = "";
     /**
      * Create the ArticleObject layout
      * @param savedInstanceState the information bundle saved by the system when the activity instance is destroyed
@@ -41,13 +43,13 @@ public class ArticleActivity extends AppCompatActivity {
         // Get the calling intent for the intent extras
         Intent intent = getIntent();
 
-        // Get the text view's from the layout
+        // Get the views from the layout resource
         TextView tvTitle = (TextView) findViewById(R.id.title);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         TextView tvDate = (TextView) findViewById(R.id.pubDate);
         WebView webView = (WebView) findViewById(R.id.webView);
 
-        // Assert that the textViews exist and aren't null
+        // Assert that the views exist and aren't null
         assert tvTitle != null;
         assert tvAuthor != null;
         assert tvDate != null;
@@ -75,7 +77,93 @@ public class ArticleActivity extends AppCompatActivity {
         // Html.fromHtml isn't good enough in this situation as it doesn't support all Html element types
         webView.loadData(intent.getStringExtra("longText"), "text/html; charset=UTF-8", null);
 
-        // Load the image asynchronously
-        new DownloadImageTask((ImageView) findViewById(R.id.image)).execute(intent.getStringExtra("imageURL"));
+        // Build the linkUrl for the article
+        linkUrl = buildArticleLink(intent.getStringExtra("category"), intent.getStringExtra("title"));
+    }
+
+    /**
+     * Inflate the article_menu.xml
+     * @param menu the menu inside the activity
+     * @return true to ensure the menu popup is opened
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the options menu for the Activity
+        getMenuInflater().inflate(R.menu.article_menu, menu);
+        return true;
+    }
+
+    /**
+     * Handle optionsMenuItem clicks, in this case to view the article in the user's browser
+     * @param item the menuItem that was clicked
+     * @return true if the action is actionArticleViewInBrowser, else it returns super.onOptionsItemSelected(item)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        // Handle the options menu item click actions, in this case view the article in the phone's browser
+        if (id == R.id.actionArticleViewInBrowser){
+            // Open a browser action with the calculated url
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(linkUrl));
+            startActivity(browserIntent);
+            return true;
+        }
+        // Return super.onOptionsItemSelected for any item we haven't explicitly covered above.
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Build the url link for the current article
+     * @param articleCategory the article category (used to determine which section of the kfl site to link to)
+     * @param articleTitle the title, used to point to the specific article on kfl.com.au
+     * @return the url string for this article
+     */
+    private String buildArticleLink(String articleCategory, String articleTitle){
+        String urlEncodedTitle = "";
+        String returnString = "";
+        // Try and encode special characters (note spaces are '_' characters in kfl.com.au links, not %20 so
+        // these are changed before encoding)
+        try{
+            urlEncodedTitle = URLEncoder.encode(articleTitle.replace(" ", "_"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        // Build the full link depending on the Article category
+        switch (articleCategory){
+            case "A":
+                // Category: Article
+                returnString = BASE_URL + "articles/" + urlEncodedTitle;
+                break;
+            case "N":
+                // Category: News
+                returnString = BASE_URL + "news/";
+                break;
+            case "TW":
+                // Category: Team Of The Week
+                returnString = BASE_URL + "Team_of_the_Week/" + urlEncodedTitle;
+                break;
+            case "TU":
+                // Category: Tipping Update
+                returnString = BASE_URL + "Tipping_Update/" + urlEncodedTitle;
+                break;
+            case "DR":
+                // Category: Donut Review
+                returnString = BASE_URL + "Donut_Review/" + urlEncodedTitle;
+                break;
+            case "TP":
+                // Category: Team Profile
+                returnString = BASE_URL + "Team_Profile/" + urlEncodedTitle;
+                break;
+            case "EA":
+                // Category: Email Archive
+                returnString = BASE_URL + "Email_Archives/" + urlEncodedTitle;
+                break;
+        }
+        // Return the url
+        return returnString;
     }
 }
