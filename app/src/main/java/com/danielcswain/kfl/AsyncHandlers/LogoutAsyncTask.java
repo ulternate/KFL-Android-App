@@ -21,7 +21,8 @@ import java.net.URL;
 /**
  * Created by Daniel Swain ulternate on 2/06/2016.
  * 
- * AsyncTask to log the user out (deleting their token in the WebServer's Database
+ * AsyncTask to log the user out (deleting their token in the WebServer's Database) and removing their data from
+ * this application
  */
 public class LogoutAsyncTask extends AsyncTask<String, Void, Void> {
 

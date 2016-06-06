@@ -27,6 +27,26 @@ import com.danielcswain.kfl.Helpers.DatabaseHelper;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Daniel Swain (ulternate) 27/05/2016
+ *
+ * MainActivity class that represents the starting point for the Application.
+ *
+ * This view shows the user the latest articles from the WebService www.kfl.com.au/api/articles
+ * as well as given users the options to login, logout, view their roster and view/edit their team selections
+ * via a side drawer navMenu
+ *
+ * Methods:
+ *  onCreate: Create and initiate the layout, set up the navMenu items based on the user's logged in status,
+ *      get the latest news Articles if the application is just starting.
+ *  setNavMenuItemVisibility(boolean loggedIn): Show the navMenuItems based on the user's logged in status.
+ *  getLatestArticlesFromWebService(String url): Get the latest articles from the WebService Asynchronously.
+ *  onBackPressed(): Handle the back press action to either hide the navMenuDrawer if open, or go back.
+ *  onCreateOptionsMenu(Menu menu): Create the optionsMenu for the application.
+ *  onOptionsItemSelected(MenuItem item): Handle the selection of optionsMenuItems.
+ *  onNavigationItemSelected(MenuItem item): Handle the selection of NavMenuItems.
+ *  onActivityResult(int requestCode, int resultCode, Intent data): Used to process the results of the LoginActivity.
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -37,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final String SHARED_PREFS_NAME = "com.danielcswain.kfl.sharedPreferences";
     public static SharedPreferences mSharedPrefs;
     public static NavigationView navigationView;
-    private static final int LOGIN_ACTIVITY_REQUEST = 1;
+    private static final int REQUEST_CODE_LOGIN_ACTIVITY = 1;
 
     public static final String LOGIN_URL = "http://www.kfl.com.au/rest-auth/login/";
     public static final String LOGOUT_URL = "http://www.kfl.com.au/rest-auth/logout/";
@@ -120,6 +140,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (MainApplication.firstStart) {
                 Toast.makeText(mContext, getResources().getString(R.string.welcomeBackUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_SHORT).show();
             }
+            // Set the navMenuItem visibility for a user that is loggedIn
+            setNavMenuItemVisibility(true);
+        } else {
+            // Set the navMenuItem visibility for a user that isn't loggedIn
+            setNavMenuItemVisibility(false);
+        }
+        // Set the navigation view listener to navigate between views
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * Set up the navMenuItem's based upon if the user is logged in or not.
+     * @param loggedIn true for a logged in user, false for a logged out user or user that's not logged in
+     */
+    private void setNavMenuItemVisibility(boolean loggedIn){
+        if(loggedIn){
             // Hide login and show logout
             navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
             navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
@@ -134,11 +170,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(false);
             navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(false);
         }
-        // Set the navigation view listener to navigate between views
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
-
+    /**
+     * Get the latest articles from the WebService using the provided URL and the ArticleGetHandler
+     * @param url the url for the WebService where the Articles can be retrieved from
+     */
     private void getLatestArticlesFromWebService(String url){
         // Show the progressBar
         assert mProgressBar != null;
@@ -147,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new ArticleGetHandler().execute(url);
     }
 
+    /**
+     * Handle the back pressed button inside the activity. this will close the drawer if it is open
+     * otherwise it will go back in the activity stack
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -157,6 +198,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Create the options menu for the Activity
+     * @param menu the menu to inflate the desired menu layout into
+     * @return true to create the options menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -164,6 +210,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * Handle the selection of the options menu items
+     * @param item the options menu item that was selected
+     * @return true to continue through the selection action
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -175,44 +226,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.actionSettings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     * Handle the selection of the navMenu items
+     * @param item the item in the nav menu that was selected
+     * @return true to continue through the selection action
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.navArticles) {
+            // Deselect the item
+            item.setChecked(false);
             // Refresh the articles
             getLatestArticlesFromWebService(ARTICLES_URL);
         } else if (id == R.id.navLogin) {
+            // Deselect the item
+            item.setChecked(false);
             // Show the login activity
             Intent intent = new Intent(mContext, LoginActivity.class);
-            startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN_ACTIVITY);
         } else if (id == R.id.navLogout){
+            // Deselect the item
+            item.setChecked(false);
             // Call the LogoutAsyncTask with the url and token to log the user out
             new LogoutAsyncTask().execute(LOGOUT_URL, mSharedPrefs.getString("token", ""));
         } else if (id == R.id.navMyTeam){
+            // Deselect the item
+            item.setChecked(false);
             // Start the Roster activity
             Intent intent = new Intent(mContext, RosterActivity.class);
             startActivity(intent);
         } else if (id == R.id.navSelectTeam){
+            // Deselect the item
+            item.setChecked(false);
             // Start the Select Team Activity
             Intent intent = new Intent(mContext, SelectionActivity.class);
             startActivity(intent);
         }
-
+        // Close the drawer upon selection
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /**
+     * Handle the result from an activity started with startActivityForResult
+     * @param requestCode the request code used to differentiate activities
+     * @param resultCode the result code set by the called activity
+     * @param data the intent data returned by the called activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LOGIN_ACTIVITY_REQUEST){
+        if (requestCode == REQUEST_CODE_LOGIN_ACTIVITY){
             if (resultCode == RESULT_OK){
                 // Get the token and username from the returning intent
                 String token = data.getStringExtra("token");
@@ -220,12 +290,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Save the token and username in the SharedPreferences file
                 mSharedPrefs.edit().putString("token", token).apply();
                 mSharedPrefs.edit().putString("username", username).apply();
-                // Hide the login navMenu item and show the logout action
-                navigationView.getMenu().findItem(R.id.navLogin).setVisible(false);
-                navigationView.getMenu().findItem(R.id.navLogout).setVisible(true);
-                // Show the navMenu items that require being logged in
-                navigationView.getMenu().findItem(R.id.navMyTeam).setVisible(true);
-                navigationView.getMenu().findItem(R.id.navSelectTeam).setVisible(true);
+                // Set the navMenuItem visibility for a user that is loggedIn
+                setNavMenuItemVisibility(true);
                 // Display a welcome message to the user
                 Toast.makeText(mContext, getResources().getString(R.string.welcomeUser, mSharedPrefs.getString("username", "")), Toast.LENGTH_LONG).show();
             }
