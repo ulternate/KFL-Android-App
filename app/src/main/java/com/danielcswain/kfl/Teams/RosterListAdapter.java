@@ -17,6 +17,10 @@ import java.util.ArrayList;
  * Created by Daniel Swain (ulternate) on 3/06/2016.
  *
  * List adapter to inflate the player_item view with the playerObjects from the User's available roster
+ *
+ * Dependencies (Classes and Objects):
+ *      MainActivity.mContext: this context object is used for grabbing application resources
+ *      PlayerObject: Utility class representing a single Player object.
  */
 public class RosterListAdapter extends ArrayAdapter<PlayerObject> {
 

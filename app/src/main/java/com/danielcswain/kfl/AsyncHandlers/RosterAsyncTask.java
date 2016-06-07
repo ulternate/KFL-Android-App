@@ -20,7 +20,19 @@ import java.util.HashMap;
 /**
  * Created by Daniel Swain (ulternate) on 6/06/2016.
  *
- * AsyncTask to get the User's Roster from the WebService
+ * AsyncTask to get the User's Roster from the WebService (Can be used in a RosterActivity or SelectionActivity)
+ *
+ * methods:
+ *  RosterAsyncTask: Constructor for the AsyncTask, requires a String from the calling activity so RosterActivity
+ *      actions only run if the RosterActivity starts this task.
+ *  doInBackground: Connect to the webService using the JSONParser
+ *  onPostExecute: Handle the saving of the Data retrieved from JSONParser via the WebService for the user's roster
+ *
+ * Dependencies (Classes and Objects):
+ *      MainActivity.mContext: this context object is used for initialising the DatabaseHelper
+ *      JSONParser: Utility class used to make a HttpUrlConnection to the webservice's User Roster api
+ *      DatabaseHelper: Utility class used to save the User's roster to the Application's database
+ *      PlayerObject: Class representing a single Player Object
  */
 public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
@@ -34,7 +46,7 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
     /**
      * Connect to the WebService using the JSONParser helper class and get back a JSONArray of user's players
-     * @param args the list ofarguments required for the JSONParser.makeHttpRequest method.
+     * @param args the list of arguments required for the JSONParser.makeHttpRequest method.
      *             In this case they are (WebService URL, API Token)
      * @return JSONArray is returned if successful, null if not successful
      */

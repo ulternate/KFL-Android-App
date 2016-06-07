@@ -3,7 +3,7 @@ package com.danielcswain.kfl;
 import android.app.Application;
 
 /**
- * Created by ulternate on 28/05/2016.
+ * Created by Daniel Swain (ulternate) on 28/05/2016.
  *
  * Custom Application class to only run json grabber once on application start (and not every onCreate
  * call in MainActivity)

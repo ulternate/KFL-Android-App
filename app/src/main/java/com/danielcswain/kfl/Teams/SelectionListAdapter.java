@@ -17,6 +17,10 @@ import java.util.ArrayList;
  * Created by Daniel Swain (ulternate) on 4/06/2016.
  *
  * ListAdapter to inflate the selection_item.xml with the PlayerObjects representing the user's Player selections
+ *
+ * Dependencies (Classes and Objects):
+ *      MainActivity.mContext: this context object is used for grabbing application resources
+ *      SelectionObject: Utility class representing a single Selected PlayerObject (position and player number)
  */
 public class SelectionListAdapter extends ArrayAdapter<SelectionObject> {
 

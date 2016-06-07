@@ -36,6 +36,10 @@ import java.util.HashMap;
  *  LoginAsyncTask: a private class that extends AsyncTask and connects to the LOGIN API in the background
  *      returning a JSONArray containing the user auth token that will be used for subsequent API calls to
  *      the WebService (that require authorisation)
+ *
+ * Dependencies (Classes and Objects):
+ *      JSONParser: used to make the HttpUrlConnection to the WebService's /rest-auth/login/ endpoint to get
+ *          the user's authorization token.
  */
 public class LoginActivity extends AppCompatActivity {
 

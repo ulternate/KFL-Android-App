@@ -26,13 +26,19 @@ import java.util.HashMap;
  *      to connect to the WebService API in the background.
  *  onPostExecute(JSONArray array): Use the returned JSONArray to update the MainActivity ListView with the
  *      new ArticleObjects received from the WebService API call.
+ *
+ * Dependencies (Classes and Objects):
+ *      ArticleObject: utility class representing a single custom Article Object
+ *      MainActivity.mContext: this context object is used for initialising the DatabaseHelper
+ *      DatabaseHelper: utility class to perform SQLite database actions for the applications database
+ *      JSONParser: utility class used to make HttpUrlConnections to the WebService API's
  */
 public class ArticleGetHandler extends AsyncTask<String, Void, JSONArray> {
 
     /**
      * Connect to the WebService to get the ArticleObjects from the API endpoint
      * @param args the arguments for the api, in this case, the URL is all that is required)
-     * @return
+     * @return a JSONArray from the WebService response (or null).
      */
     @Override
     protected JSONArray doInBackground(String... args) {

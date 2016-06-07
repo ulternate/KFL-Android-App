@@ -45,6 +45,15 @@ import java.util.HashMap;
  *  SelectionAsyncTask: A private class that extends the AsyncTask class and implements the doInBackground
  *      and onPostExecute methods to connect to the WebService using the /api/selected_team endpoint and
  *      parse the JSONArray into valid SelectionObjects and put any new ones into the database
+ *
+ * Dependencies (Classes and Objects):
+ *      DatabaseHelper: Allows connections and actions to be performed on the Application database
+ *      JSONParser: Makes the HttpUrlConnection to get the latest Selections for the user
+ *      RosterAsyncTask: Custom AsyncTask used to get the latest player roster for the user so the
+ *          SelectionEditActivity uses the latest team roster.
+ *      LogoutAsyncTask: Used when an in valid API token is used, performs the log out action and wipes the database
+ *      SelectionObject: Utility class representing a selected Player object (their position and player number)
+ *      PlayerObject: Utility class that represents a single Player object
  */
 public class SelectionActivity extends AppCompatActivity {
 

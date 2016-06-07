@@ -43,6 +43,12 @@ import java.util.HashMap;
  *  SelectionEditAsyncTask: Send the selections to the WebService via the PUT method to update the user's selections
  *      in the Site database (also reflects those changes in the application database)
  *
+ * * Dependencies (Classes and Objects):
+ *      DatabaseHelper: Allows connections and actions to be performed on the Application database
+ *      JSONParser: Makes the HttpUrlConnection to put (update) the latest Selections for the user on the WebService
+ *      LogoutAsyncTask: Used when an in valid API token is used, performs the log out action and wipes the database
+ *      SelectionObject: Utility class representing a selected Player object (their position and player number)
+ *      PlayerObject: Utility class that represents a single Player object
  */
 public class SelectionEditActivity extends AppCompatActivity {
 

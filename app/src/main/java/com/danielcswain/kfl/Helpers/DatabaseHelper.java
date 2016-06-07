@@ -39,6 +39,11 @@ import java.util.ArrayList;
  *  doesSelectionExist(SelectionObject obj): Check to see if the provided SelectionObject exists in the db already.
  *      Returns boolean (true or false).
  *  deleteAllObjects(String tableName): Delete all records from the provided table. Used when logging the user out.
+ *
+ * Dependencies (Classes and Objects):
+ *      ArticleObject: Utility class representing a single Article Object
+ *      PlayerObject: Utility class representing a single PlayerObject
+ *      SelectionObject: Utility class representing a single Selected PlayerObject (i.e. their position & selection num)
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 

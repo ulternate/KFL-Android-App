@@ -27,6 +27,10 @@ import java.util.Date;
  *      ArrayList of ArticleObjects
  *  getView: Get the view for an individual ArrayList articleObject item. This inflates article_item.xml and fills
  *      the view with the details from the appropriate ArticleObject
+ *
+ * Dependencies (Classes and Objects):
+ *      MainActivity.mContext: this context object is used for grabbing application resources
+ *      ArticleObject: the Object class representing a single object
  */
 public class ArticleListAdapter extends ArrayAdapter<ArticleObject>{
 

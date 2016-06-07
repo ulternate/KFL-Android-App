@@ -23,6 +23,11 @@ import java.net.URL;
  * 
  * AsyncTask to log the user out (deleting their token in the WebServer's Database) and removing their data from
  * this application
+ *
+ * Dependencies (Classes and Objects):
+ *      MainActivity.mContext: this context object is used for initialising the DatabaseHelper, sending toast messages
+ *          and updating the NavMenu items to show actions only available when not logged in.
+ *      DatabaseHelper: Utility class to perform SQLite database actions on the application's database
  */
 public class LogoutAsyncTask extends AsyncTask<String, Void, Void> {
 

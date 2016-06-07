@@ -42,11 +42,12 @@ import java.util.ArrayList;
  *  getLatestArticlesFromWebService(String url): Get the latest articles from the WebService Asynchronously.
  *  onBackPressed(): Handle the back press action to either hide the navMenuDrawer if open, or go back.
  *  onNavigationItemSelected(MenuItem item): Handle the selection of NavMenuItems.
- *  onActivityResult(int requestCode, int resultCode, Intent data): Used to process the results of the LoginActivity.
+ *  onActivityResult(int requestCode, int resultCode, Intent data): Used to process the results of the
+ *      LoginActivity.
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    // Class objects, some used by AsyncTasks to update the views or get the application context
     public static ListView mListView;
     public static ArticleListAdapter mAdapter;
     public static Context mContext;
@@ -54,8 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final String SHARED_PREFS_NAME = "com.danielcswain.kfl.sharedPreferences";
     public static SharedPreferences mSharedPrefs;
     public static NavigationView navigationView;
+
+    // Request codes for startActivityForResult actions
     private static final int REQUEST_CODE_LOGIN_ACTIVITY = 1;
 
+    // API paths for the WebService actions
     public static final String LOGIN_URL = "https://www.kfl.com.au/rest-auth/login/";
     public static final String LOGOUT_URL = "https://www.kfl.com.au/rest-auth/logout/";
     public static final String ARTICLES_URL = "https://www.kfl.com.au/api/articles/";

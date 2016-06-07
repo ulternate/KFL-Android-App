@@ -18,12 +18,17 @@ import java.util.ArrayList;
  * Created by Daniel Swain (ulternate) 03/06/2016
  *
  * Activity class for the 'My Roster' activity, used to show the user's player roster that they
- * can pick from in the SelectTeamActivity. This uses the http://www.kfl.com.au/api/user_team endpoint.
+ * can pick from in the SelectionEditActivity. This uses the http://www.kfl.com.au/api/user_team endpoint.
  *
  * Methods:
  *  onCreate: set the layout, connect our RosterListAdapter to the ListView and get the team
  *      roster from the Database, whilst also checking for new players from the WebService (which
  *      will only add new players to the local database).
+ *
+ * Dependencies (Classes and Objects):
+ *      PlayerObject: Utility class representing a single PlayerObject
+ *      RosterListAdapter: Custom ListAdapter for the Player ListView
+ *      RosterAsyncTask: Custom AsyncTask to connect and update the Database with the User's latest player roster.
  */
 public class RosterActivity extends AppCompatActivity {
 
