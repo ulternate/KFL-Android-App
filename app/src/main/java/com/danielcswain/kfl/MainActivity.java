@@ -56,11 +56,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static NavigationView navigationView;
     private static final int REQUEST_CODE_LOGIN_ACTIVITY = 1;
 
-    public static final String LOGIN_URL = "http://www.kfl.com.au/rest-auth/login/";
-    public static final String LOGOUT_URL = "http://www.kfl.com.au/rest-auth/logout/";
-    public static final String ARTICLES_URL = "http://www.kfl.com.au/api/articles/";
-    public static final String TEAM_URL = "http://www.kfl.com.au/api/user_team/";
-    public static final String SELECTION_URL = "http://www.kfl.com.au/api/selected_team/";
+    public static final String LOGIN_URL = "https://www.kfl.com.au/rest-auth/login/";
+    public static final String LOGOUT_URL = "https://www.kfl.com.au/rest-auth/logout/";
+    public static final String ARTICLES_URL = "https://www.kfl.com.au/api/articles/";
+    public static final String TEAM_URL = "https://www.kfl.com.au/api/user_team/";
+    public static final String SELECTION_URL = "https://www.kfl.com.au/api/selected_team/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
