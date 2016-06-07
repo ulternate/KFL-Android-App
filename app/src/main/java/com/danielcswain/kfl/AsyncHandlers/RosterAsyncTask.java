@@ -3,12 +3,15 @@ package com.danielcswain.kfl.AsyncHandlers;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Helpers.JSONParser;
 import com.danielcswain.kfl.MainActivity;
+import com.danielcswain.kfl.R;
 import com.danielcswain.kfl.RosterActivity;
 import com.danielcswain.kfl.Teams.PlayerObject;
+import com.danielcswain.kfl.Teams.PlayerObjectComparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -104,20 +107,27 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
             teamName = team.getString("team_name");
             // Get the players from the team object (it will be a JSONArray
             JSONArray players = team.getJSONArray("players");
-            // Create a PlayerObject for each player and save it in the database if it doesn't exist
-            for (int i = 0; i < players.length(); i++) {
-                // Get the individual player and their params
-                JSONObject player = players.getJSONObject(i);
-                String playerName = player.getString("player_name");
-                String aflTeam = player.getString("player_team");
-                // Create a playerObject
-                PlayerObject playerObject = new PlayerObject(playerName, aflTeam);
-                // If the playerObject doesn't exist then add it to the newPlayerObject ArrayList (for our listAdapter)
-                if (!mDatabaseHelper.doesPlayerExist(playerObject)){
-                    newPlayerObjects.add(playerObject);
+            // Delete all the old players from the Database to ensure there are only the latest from the server
+            if(players != null && players.length() > 0){
+                // Only delete all the objects if there was a valid player array in the response from the webService
+                mDatabaseHelper.deleteAllObjects(DatabaseHelper.TABLE_NAME_TEAM);
+            }
+            // Create a PlayerObject for each player and save it in the database
+            if (players != null) {
+                for (int i = 0; i < players.length(); i++) {
+                    // Get the individual player and their params
+                    JSONObject player = players.getJSONObject(i);
+                    String playerName = player.getString("player_name");
+                    String aflTeam = player.getString("player_team");
+                    // Create a playerObject
+                    PlayerObject playerObject = new PlayerObject(playerName, aflTeam);
+                    // If the playerObject doesn't exist then add it to the newPlayerObject ArrayList
+                    if (!mDatabaseHelper.doesPlayerExist(playerObject)) {
+                        newPlayerObjects.add(playerObject);
+                    }
+                    // Save the playerObject to the database
+                    mDatabaseHelper.addPlayer(playerObject);
                 }
-                // Try and save the playerObject to the database (this checks for uniqueness)
-                mDatabaseHelper.addPlayer(playerObject);
             }
         }catch(NullPointerException | JSONException n){
             // Print the exception stack trace
@@ -129,11 +139,16 @@ public class RosterAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
         // If the callingClass was the RosterActivity then update the views, otherwise skip this step
         if(callingActivity.equals("RosterActivity")) {
-            // If we have new players then add them to the RosterListAdapter
+            // Add the new players to the RosterListAdapter, clearing the old players first
             if (newPlayerObjects.size() > 0) {
+                RosterActivity.mAdapter.clear();
                 RosterActivity.mAdapter.addAll(newPlayerObjects);
+                // Sort the ListView using the PlayerObjectComparator
+                RosterActivity.mAdapter.sort(new PlayerObjectComparator());
                 // Notify the list adapter that the Data Set was changed
                 RosterActivity.mAdapter.notifyDataSetChanged();
+                // Send toast to user notifying the latest roster has been grabbed
+                Toast.makeText(MainActivity.mContext, R.string.gotLatestRoster, Toast.LENGTH_SHORT).show();
             }
 
             // Hide the loading text and the progressBar

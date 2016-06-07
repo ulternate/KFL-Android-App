@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.danielcswain.kfl.AsyncHandlers.RosterAsyncTask;
 import com.danielcswain.kfl.Helpers.DatabaseHelper;
 import com.danielcswain.kfl.Teams.PlayerObject;
+import com.danielcswain.kfl.Teams.PlayerObjectComparator;
 import com.danielcswain.kfl.Teams.RosterListAdapter;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
  *
  * Dependencies (Classes and Objects):
  *      PlayerObject: Utility class representing a single PlayerObject
+ *      PlayerObjectComparator: Used to compare two PlayerObjects to sort from A-Z via playerName
  *      RosterListAdapter: Custom ListAdapter for the Player ListView
  *      RosterAsyncTask: Custom AsyncTask to connect and update the Database with the User's latest player roster.
  */
@@ -76,6 +78,8 @@ public class RosterActivity extends AppCompatActivity {
         // Connect to the database and populate the list adapter with the existing playerObjects
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(getApplicationContext());
         mAdapter.addAll(mDatabaseHelper.getPlayers());
+        // Sort the PlayerObjects using the custom PlayerObjectComparator
+        mAdapter.sort(new PlayerObjectComparator());
         mAdapter.notifyDataSetChanged();
         // Close the database helper
         mDatabaseHelper.close();

@@ -51,4 +51,5 @@
     <string name="selectionNoneWarn">You must select a player for all positions</string>
     <string name="editSelectionsSuccess">Your selections have been successfully updated.</string>
     <string name="clickToViewArticle">View on KFL.com.au</string>
+    <string name="gotLatestRoster">Retrieved your latest team roster</string>
 </resources>
